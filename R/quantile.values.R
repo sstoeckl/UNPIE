@@ -6,7 +6,6 @@
 #' @examples
 #' quantile.values(values=c(1:100), quantiles=c(0,0.25,0.5,0.75,1))
 
-
 quantile.values <- function(values, quantiles=c(0,0.25,0.5,0.75,1)){
   ##Type check
   if(!is.vector(quantiles)) return(stop("quantiles must be of type numeric vector with values in [0,1]",call. = FALSE))
