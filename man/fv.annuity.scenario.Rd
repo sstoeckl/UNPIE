@@ -5,8 +5,8 @@
 \title{Calculates scenarios of future value of annuity payments (fv) with stochastic returns}
 \usage{
 fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
-  nScenario = 1, returnScenarios = FALSE, quantiles = c(0, 0.25, 0.5,
-  0.75, 1), seed = NULL)
+  convRate = 1, nScenario = 1, returnScenarios = FALSE, quantiles = c(0,
+  0.25, 0.5, 0.75, 1), seed = NULL)
 }
 \arguments{
 \item{pmt}{The payment (real) made each period (annuity). Must be entered as a negative number.}
@@ -17,6 +17,8 @@ fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
 
 \item{sigma}{Volatility of expected interest real return per period. Default is zero. Must be entered as decimal}
 
+\item{convRate}{The conversion rate. Default is one. Must be entered as decimal}
+
 \item{nScenario}{The total number of scenarios to be made. Default is one scenario}
 
 \item{returnScenarios}{Should the scenarios be returned}
@@ -24,8 +26,6 @@ fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
 \item{quantiles}{Quantile scenarios to be returned. Should be a numeric vector of probabilities with values in [0,1]}
 
 \item{seed}{Integer vector, containing the random number generator (RNG) state for random number generation in R}
-
-\item{convRate}{The conversion rate. Default is one. Must be entered as decimal}
 }
 \description{
 Calculates scenarios of future value of annuity payments (fv) with stochastic returns
