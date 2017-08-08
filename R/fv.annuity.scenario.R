@@ -11,7 +11,8 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1),seed =NULL)
+#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
+#'
 
 fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
   ##Type check
@@ -84,7 +85,7 @@ fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1
 
   lifelongPension = scenarios[nper,]*convRate
   lifelongPensionSorted = sort(lifelongPension)
-  quantileScenarios = t(apply(scenarios,1,quantile.values))
+  quantileScenarios =   quantileScenarios =   t(apply(scenarios,1,quantile,probs=quantiles))
 
 
   if(returnScenarios){

@@ -31,5 +31,6 @@ fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
 Calculates scenarios of future value of annuity payments (fv) with stochastic returns
 }
 \examples{
-fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1),seed =NULL)
+fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
+
 }
