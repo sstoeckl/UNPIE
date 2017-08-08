@@ -1,8 +1,7 @@
 context("fv.annuity.scenario")
 
-test_that("01 test that fv.annuity.scenario returns a dataframe with known scenarios and result data", {
+test_that("01 test that fv.annuity.scenario returns a list with known scenarios and result data", {
   res =fv.annuity.scenario(pmt=-1000,nper=4,mu=0.03,sigma=0.08,convRate=0.05,nScenario=5, returnScenarios = TRUE, quantiles=c(0,0.25,0.5,0.75,1),seed =1)
-
   a=matrix(data=c(rep(1000,5),2045.705,1964.990, 2005.584, 1863.142, 2111.274, 2971.692, 3105.350, 3332.354, 3100.675, 3323.301,4479.032, 4394.621, 4542.619, 4183.640, 4591.144),ncol=5,byrow =TRUE)
   colnames(a)=c("Scenario1", "Scenario2", "Scenario3", "Scenario4", "Scenario5")
   rownames(a)=c("Time1","Time2","Time3","Time4")
@@ -24,7 +23,7 @@ test_that("01 test that fv.annuity.scenario returns a dataframe with known scena
 })
 
 
-test_that("02 test that fv.annuity.scenario returns a dataframe without scenarios and known result data", {
+test_that("02 test that fv.annuity.scenario returns a list without scenarios and known result data", {
   res =fv.annuity.scenario(pmt=-1000,nper=4,mu=0.03,sigma=0.08,convRate=0.05,nScenario=5, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1),seed =08082017)
 
   expect_identical(res$Scenarios,matrix(NA))

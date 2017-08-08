@@ -11,7 +11,7 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1),seed =NULL) {
+#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1),seed =NULL)
 
 fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
   ##Type check
@@ -86,14 +86,12 @@ fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1
   lifelongPensionSorted = sort(lifelongPension)
   quantileScenarios = t(apply(scenarios,1,quantile.values))
 
-  ReturnData <- setRefClass("ReturnData",fields = list(Scenarios = "matrix",Lifelong_pension = "numeric" ,Lifelong_pension_sorted  = "numeric", Quantile_scenarios = "matrix"))
-
 
   if(returnScenarios){
-    data <- ReturnData(Scenarios = scenarios, Lifelong_pension = lifelongPension, Lifelong_pension_sorted=lifelongPensionSorted,Quantile_scenarios=quantileScenarios)
+    data <- list(Scenarios = scenarios, Lifelong_pension = lifelongPension, Lifelong_pension_sorted=lifelongPensionSorted,Quantile_scenarios=quantileScenarios)
 
   }else{
-    data <- ReturnData(Scenarios = matrix(NA), Lifelong_pension = lifelongPension, Lifelong_pension_sorted=lifelongPensionSorted,Quantile_scenarios=quantileScenarios)
+    data <- list(Scenarios = matrix(NA), Lifelong_pension = lifelongPension, Lifelong_pension_sorted=lifelongPensionSorted,Quantile_scenarios=quantileScenarios)
   }
   return(data)
 }
