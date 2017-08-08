@@ -2,7 +2,7 @@
 % Please edit documentation in R/pv.annuity.R
 \name{pv.annuity}
 \alias{pv.annuity}
-\title{Returns the present value value of annuity payments (spending) made in the future (fv)}
+\title{Returns the present value of annuity payments (spending) made in the future (fv)}
 \usage{
 pv.annuity(rate = 0, inflation = 0, nper = 1, pmt = 0,
   pmtinfladj = FALSE, pmtUltimo = TRUE)
@@ -21,7 +21,7 @@ pv.annuity(rate = 0, inflation = 0, nper = 1, pmt = 0,
 \item{pmtUltimo}{When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.}
 }
 \description{
-Returns the present value value of annuity payments (spending) made in the future (fv)
+Returns the present value of annuity payments (spending) made in the future (fv)
 }
 \examples{
 pv.annuity(rate=0.01,inflation=0, nper=10,pmt=-10,pmtinfladj=FALSE,pmtUltimo=TRUE)

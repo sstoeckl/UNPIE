@@ -1,8 +1,8 @@
 #' Returns the future value of annuity payments (fv)
 #'
-#' @param rate The interest rate per period. Default is zero. Must be entered as decimal
+#' @param rate The interest rate per period. Default is zero. Must be entered as decimal or ts
 #' @param nper The total number of payment periods. Default is one period
-#' @param inflation The inflation rate per period. Default is zero. Must be entered as decimal
+#' @param inflation The inflation rate per period. Default is zero. Must be entered as decimal or ts
 #' @param pmt The payment made each period (annuity). Must be entered as a negative number.
 #' @param pmtinfladj Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Default value = FALSE.
 #' @param pmtUltimo When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
@@ -64,22 +64,22 @@ fv.annuity <- function(rate=0,inflation=0,nper=1,pmt=0,pmtinfladj=FALSE,pmtUltim
     inflation = ts(rep(0,nper), frequency = frequency, start = start, end = end)
   }
 
-  val=c(rep(0,length(pmt)))
-  for(index in 1:length(pmt)){
-    if(isTRUE(pmtUltimo)){
-      if (index==1){
-        val[index] = pmt[index]
+    val=c(rep(0,length(pmt)))
+    for(index in 1:length(pmt)){
+      if(isTRUE(pmtUltimo)){
+        if (index==1){
+          val[index] = pmt[index]
+        }else{
+          val[index] = pmt[index]+(1+rate[index])*val[index-1]
+        }
       }else{
-        val[index] = pmt[index]+(1+rate[index])*val[index-1]
-      }
-    }else{
-      if (index==1){
-        val[index] = (1+rate[index])*pmt[index]
-      }else{
-      val[index] = (1+rate[index])*(val[index-1]+pmt[index])
+        if (index==1){
+          val[index] = (1+rate[index])*pmt[index]
+        }else{
+        val[index] = (1+rate[index])*(val[index-1]+pmt[index])
+        }
       }
     }
-  }
 
   fv = ts(-val,start = start,frequency = frequency)
 

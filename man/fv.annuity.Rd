@@ -8,9 +8,9 @@ fv.annuity(rate = 0, inflation = 0, nper = 1, pmt = 0,
   pmtinfladj = FALSE, pmtUltimo = TRUE)
 }
 \arguments{
-\item{rate}{The interest rate per period. Default is zero. Must be entered as decimal}
+\item{rate}{The interest rate per period. Default is zero. Must be entered as decimal or ts}
 
-\item{inflation}{The inflation rate per period. Default is zero. Must be entered as decimal}
+\item{inflation}{The inflation rate per period. Default is zero. Must be entered as decimal or ts}
 
 \item{nper}{The total number of payment periods. Default is one period}
 

@@ -207,3 +207,18 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
   
   return(pmt)
 }
+#* @get /fv.annuity.scenario
+function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
+  unpie::fv.annuity.scenario(
+    pmt = as.numeric(pmt),
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    convRate = as.numeric(convRate),
+    nScenario = as.numeric(nScenario),
+    returnScenarios = as.logical(returnScenarios),
+    quantiles = as.numeric(quantiles),
+    seed = as.numeric(seed)
+  )
+
+}

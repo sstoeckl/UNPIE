@@ -19,7 +19,7 @@ fv.single(rate = 0, inflation = 0, nper = 1, pv = 0)
 Returns the future value of an single payment (fv)
 }
 \examples{
-fv.single(rate=0.01,nper=10,pv=-1000)
+fv.single(rate=0.01,nper=20,pv=-1000)
 }
 \seealso{
 \code{\link{fv}}
