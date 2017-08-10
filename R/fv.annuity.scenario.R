@@ -5,23 +5,23 @@
 #' @param mu The expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param sigma Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param convRate The conversion rate. Default is one. Must be entered as decimal
-#' @param nScenario The total number of scenarios to be made. Default is one scenario
+#' @param nScenarios The total number of scenarios to be made. Default is one scenario
 #' @param returnScenarios Should the scenarios be returned
 #' @param quantiles Quantile scenarios to be returned. Should be a numeric vector of probabilities with values in [0,1]
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
+#' fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenarios=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
 #'
 
-fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
+fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
   ##Type check
   if(!(is.ts(pmt) || is.scalar(pmt))) return(stop("pmt must either be of type scalar or ts", call. = FALSE))
   if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))
   if(!(is.ts(mu) || is.scalar(mu))) return(stop("mu must either be of type scalar or ts", call. = FALSE))
   if(!(is.ts(sigma) || is.scalar(sigma))) return(stop("sigma must either be of type scalar or ts", call. = FALSE))
   if(!is.scalar(convRate)) return(stop("convRate must be of type scalar",call. = FALSE))
-  if(!is.scalar(nScenario)) return(stop("nScenario must be of type scalar",call. = FALSE))
+  if(!is.scalar(nScenarios)) return(stop("nScenarios must be of type scalar",call. = FALSE))
   if(!is.logical(returnScenarios)) return(stop("returnScenarios must be of type boolean",call. = FALSE))
   if(!is.vector(quantiles)) return(stop("quantiles must be of type numeric vector with values in [0,1]",call. = FALSE))
 
@@ -68,11 +68,11 @@ fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1
     pmt = ts(rep(pmt,nper), frequency = frequency, start = start, end = end)
   }
 
-  scenarios = matrix(data = NA,nrow = nper,ncol = nScenario,)
+  scenarios = matrix(data = NA,nrow = nper,ncol = nScenarios,)
   colnames(scenarios) <- colnames(scenarios, do.NULL = FALSE, prefix = "Scenario")
   rownames(scenarios) <- rownames(scenarios, do.NULL = FALSE, prefix = "Time")
 
-  for(scenario in 1:nScenario){ #Calculates each scenario
+  for(scenario in 1:nScenarios){ #Calculates each scenario
     for(index in 1:length(pmt)){ #calculates principal
       return =exp(mu[index]+sigma[index]* rnorm(n = 1, mean = 0, sd = 1 ))
       if (index==1){

@@ -91,17 +91,33 @@ function(rate = 0, inflation = 0, nper = 1, fv = 0){
 }
 
 #* @get /fv.annuity.scenario
-function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenario=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
+function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
   unpie::fv.annuity.scenario(
     pmt = as.numeric(pmt),
     nper = as.numeric(nper),
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
     convRate = as.numeric(convRate),
-    nScenario = as.numeric(nScenario),
+    nScenarios = as.numeric(nScenarios),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
+  )
+
+}
+
+#* @get /requiredSavingsForMinimumAnnuity
+function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE) {
+  unpie::requiredSavingsForMinimumAnnuity(
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    convRate = as.numeric(convRate),
+    nScenarios = as.numeric(nScenarios),
+    minPayouy = as.numeric(minPayouy),
+    prob = as.numeric(prob),
+    seed = as.numeric(seed)
+    print = as.logical(print)
   )
 
 }

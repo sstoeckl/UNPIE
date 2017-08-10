@@ -5,8 +5,8 @@
 \title{Calculates scenarios of future value of annuity payments (fv) with stochastic returns}
 \usage{
 fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
-  convRate = 1, nScenario = 1, returnScenarios = FALSE, quantiles = c(0,
-  0.25, 0.5, 0.75, 1), seed = NULL)
+  convRate = 1, nScenarios = 1, returnScenarios = FALSE,
+  quantiles = c(0, 0.25, 0.5, 0.75, 1), seed = NULL)
 }
 \arguments{
 \item{pmt}{The payment (real) made each period (annuity). Must be entered as a negative number.}
@@ -19,7 +19,7 @@ fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
 
 \item{convRate}{The conversion rate. Default is one. Must be entered as decimal}
 
-\item{nScenario}{The total number of scenarios to be made. Default is one scenario}
+\item{nScenarios}{The total number of scenarios to be made. Default is one scenario}
 
 \item{returnScenarios}{Should the scenarios be returned}
 
@@ -31,6 +31,6 @@ fv.annuity.scenario(pmt = 0, nper = 1, mu = 0, sigma = 0,
 Calculates scenarios of future value of annuity payments (fv) with stochastic returns
 }
 \examples{
-fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenario=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
+fv.annuity.scenario(pmt=-1000,nper=25,mu=0.03,sigma=0.08,convRate=0.05,nScenarios=100,returnScenarios=FALSE,quantiles=c(0,0.25,0.5,0.75,1),seed=NULL)
 
 }
