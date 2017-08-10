@@ -22,6 +22,6 @@ scenarioGenerator(nper = 25, nScenarios = 1000, mean = 0, sd = 1,
 Makes scenarios with rnorm.
 }
 \examples{
-ScenarioGenerator(nper=25,nScenarios=1000,mean=0,sd=1,seed=NULL)
+scenarioGenerator(nper=25,nScenarios=1000,mean=0,sd=1,seed=NULL)
 
 }
