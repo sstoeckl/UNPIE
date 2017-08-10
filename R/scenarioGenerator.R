@@ -7,7 +7,7 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' ScenarioGenerator(nper=25,nScenarios=1000,mean=0,sd=1,seed=NULL)
+#' scenarioGenerator(nper=25,nScenarios=1000,mean=0,sd=1,seed=NULL)
 #'
 
 scenarioGenerator <- function(nper=25,nScenarios=1000,mean=0,sd=1,seed = NULL){

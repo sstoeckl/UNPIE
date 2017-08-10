@@ -14,7 +14,7 @@
 #' @examples
 #' requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE)
 
-requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy=1000,prob=0.95,seed=NULL,print=F) {
+requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy=1000,prob=0.95,seed=NULL,print=FALSE) {
   ##Type check
 
   if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))
