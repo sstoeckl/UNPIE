@@ -122,6 +122,23 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
 
 }
 
+#* @get /timeToRuin.scenario
+function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
+  unpie::timeToRuin.scenario(
+    spending = as.numeric(spending),
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    wealth = as.numeric(wealth),
+    nScenarios = as.numeric(nScenarios),
+    minPayouy = as.numeric(minPayouy),
+    returnScenarios = as.logical(returnScenarios),
+    quantiles = as.numeric(quantiles),
+    seed = as.numeric(seed)
+  )
+
+}
+
 #######################################################################################
 #######################################################################################
 ################################## WRAPPERS ###########################################

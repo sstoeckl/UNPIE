@@ -85,7 +85,7 @@ fv.annuity.scenario <- function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=
 
   lifelongPension = scenarios[nper,]*convRate
   lifelongPensionSorted = sort(lifelongPension)
-  quantileScenarios =   quantileScenarios =   t(apply(scenarios,1,quantile,probs=quantiles))
+  quantileScenarios = t(apply(scenarios,1,quantile,probs=quantiles))
 
 
   if(returnScenarios){
