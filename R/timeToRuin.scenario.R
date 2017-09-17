@@ -23,7 +23,6 @@ timeToRuin.scenario <- function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nS
   if(!is.scalar(wealth)) return(stop("wealth must be of type scalar",call. = FALSE))
   if(!is.scalar(nScenarios)) return(stop("nScenarios must be of type scalar",call. = FALSE))
   if(!is.logical(returnScenarios)) return(stop("returnScenarios must be of type boolean",call. = FALSE))
-  if(!is.vector(quantiles)) return(stop("quantiles must be of type numeric vector with values in [0,1]",call. = FALSE))
 
   if(!is.vector(quantiles)) return(stop("quantiles must be of type numeric vector with values in [0,1]",call. = FALSE))
   if(!is.numeric(quantiles)) return(stop("quantiles must be of type numeric vector with values in [0,1]",call. = FALSE))
