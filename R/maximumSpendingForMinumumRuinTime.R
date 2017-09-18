@@ -2,7 +2,6 @@
 #'
 #' @param wealth The wealth at retirement. Must be entered as a positive number
 #' @param minumumRuinTime
-#' @param nper The planing horizon.
 #' @param mu The expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param sigma Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param nScenarios The total number of scenarios to be made. Default is one scenario
@@ -10,14 +9,13 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' maximumSpendingForMinumumRuinTime(wealth=14000,minumumRuinTime = 16,nper=25,mu=0.03,sigma=0.08,nScenarios=10, prob = 0.9, seed =NULL)
+#' maximumSpendingForMinumumRuinTime(wealth=14000,minumumRuinTime = 16,mu=0.03,sigma=0.08,nScenarios=10, prob = 0.9, seed =NULL)
 #'
 
-maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,nper=25,mu=0.03,sigma=0.08,nScenarios=10,prob=0.9,seed=NULL) {
+maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,mu=0.03,sigma=0.08,nScenarios=10,prob=0.9,seed=NULL) {
   ##Type check
   if(!is.scalar(wealth)) return(stop("wealth must be of type scalar",call. = FALSE))
   if(!is.scalar(minumumRuinTime)) return(stop("minumumRuinTime must be of type scalar",call. = FALSE))
-  if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))
   if(!is.scalar(mu)) return(stop("mu must either be of type scalar", call. = FALSE))
   if(!is.scalar(sigma)) return(stop("sigma must either be of type scalar", call. = FALSE))
   if(!is.scalar(nScenarios)) return(stop("nScenarios must be of type scalar",call. = FALSE))
@@ -35,8 +33,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,np
     nScenarios = nrow(mat)
 
     return(function(spending){
-
-      scenarios = matrix(NA,nrow =nScenarios,ncol = nper)
+      scenarios = matrix(NA,nrow =nScenarios,ncol = (target + 1))
       colnames(scenarios) <- colnames(scenarios, do.NULL = FALSE, prefix = "Time")
       rownames(scenarios) <- rownames(scenarios, do.NULL = FALSE, prefix = "Scenario")
 
@@ -53,7 +50,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,np
 
 
         for(scenario in 1:nScenarios){ #Calculates each scenario
-          for(time in 1:nper){ #calculates principal
+          for(time in 1:(minumumRuinTime+1)){ #calculates principal
             scenarios[scenario,time+1] = -spending[i]+mat[scenario,time]*scenarios[scenario,time]
           }
           ruined[scenario] <- which(scenarios[scenario,] <= 0)[1]-1
@@ -76,7 +73,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,np
 
 
   # Make objectivefunction.
-  randData=matrix(rnorm(n = nScenarios*nper, mu, sigma ),nrow = nScenarios)
+  randData=matrix(rnorm(n = nScenarios*(minumumRuinTime+1), mu, sigma ),nrow = nScenarios)
   return = t(apply(randData,1,function(x) exp(x)))
   colnames(return) <- colnames(return, do.NULL = FALSE, prefix = "Time")
   rownames(return) <- rownames(return, do.NULL = FALSE, prefix = "Scenario")
