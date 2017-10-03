@@ -9,10 +9,15 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' maximumSpendingForMinumumRuinTime(wealth=14000,minumumRuinTime = 16,mu=0.03,sigma=0.08,nScenarios=10, prob = 0.9, seed =NULL)
+#' maximumSpendingForMinumumRuinTime(wealth=14000,minumumRuinTime = 16,mu=0.03,sigma=0.08,nScenarios=200, prob = 0.9, seed =NULL)
 #'
-
-maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,mu=0.03,sigma=0.08,nScenarios=10,prob=0.9,seed=NULL) {
+maximumSpendingForMinumumRuinTime <- function(wealth=14000,
+                                              minumumRuinTime=16,
+                                              mu=0.03,
+                                              sigma=0.08,
+                                              nScenarios=200,
+                                              prob=0.9,
+                                              seed=NULL) {
   ##Type check
   if(!is.scalar(wealth)) return(stop("wealth must be of type scalar",call. = FALSE))
   if(!is.scalar(minumumRuinTime)) return(stop("minumumRuinTime must be of type scalar",call. = FALSE))
@@ -21,70 +26,52 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,minumumRuinTime=16,mu
   if(!is.scalar(nScenarios)) return(stop("nScenarios must be of type scalar",call. = FALSE))
   if(!is.scalar(prob)) return(stop("prob must be of type scalar with value in [0,1]",call. = FALSE))
   if(prob>1 || prob<0) return(stop("prob must be of type scalar with value in [0,1]",call. = FALSE))
-
   if(is.numeric(seed)){
-    set.seed(seed)
+      set.seed(seed)
   }
 
+  t <- minumumRuinTime
+  n <- nScenarios
+  p <- prob
 
-  ObjectivFunction <- function(mat,wealth,target,prc){
-    # Closure which return the objective function as function of one variable.
+  # Generate rates.
+  r <- matrix(rnorm(nScenarios*t,mu,sigma),nScenarios,t)
 
-    nScenarios = nrow(mat)
+  # Compound rates.<
+  r[,1] <- 0
+  rf <- t(apply(r,1,function(x) cumprod(x+1)))
 
-    return(function(spending){
-      scenarios = matrix(NA,nrow =nScenarios,ncol = (target + 1))
-      colnames(scenarios) <- colnames(scenarios, do.NULL = FALSE, prefix = "Time")
-      rownames(scenarios) <- rownames(scenarios, do.NULL = FALSE, prefix = "Scenario")
+  # Lag one term.
+  c <- rf
+  c[,2:t] <- c[,1:(t-1)]
+  c[,1] <- 0
+  # Sum compound rates to achive spending with compounding rates.
+  # NB. will not work for a x_i only if x is constant.
+  rc <- t(apply(c,1,function(x) cumsum(x)))
 
-      init = matrix(wealth,nrow =nScenarios,ncol = 1)
-      colnames(init) <-  "Time0"
-      rownames(init) <- rownames(init, do.NULL = FALSE, prefix = "Scenario")
-      scenarios=cbind(init,scenarios)
-      ruined = c(rep(NA,nScenarios))
-      names(ruined) <- rownames(ruined, do.NULL = FALSE, prefix = "Scenario")
+  # Calculate saving.a
+  Up <- rf*wealth
 
-
-      res = numeric(length(spending))
-      for(i in 1:length(spending)){
-
-
-        for(scenario in 1:nScenarios){ #Calculates each scenario
-          for(time in 1:(minumumRuinTime+1)){ #calculates principal
-            scenarios[scenario,time+1] = -spending[i]+mat[scenario,time]*scenarios[scenario,time]
-          }
-          ruined[scenario] <- which(scenarios[scenario,] <= 0)[1]-1
-
-        }
-
-        res[i] = sum(ruined>=minumumRuinTime)/nScenarios
-
-        return(res-prc)
-      }
-
-    })
-
+  scenariosCalculate <- function(x){
+    return(Up - rc*x)
   }
 
-  # --- Setup and call ---
+  nrs <- function(scenarios){
+    signchanges <- scenarios <= 0
+    nr <- apply(signchanges,1,function(x) which(diff(sign(x))!=0)[1])
+    nr[is.na(nr)] <- t
+    return(nr)
+  }
 
-  # Define goalseek problem.
-  probAdjusted = fixLimit(nScenarios,prob)
+  fun <- function(x){
+    scenarios <- scenariosCalculate(x)
+    nr <- nrs(scenarios)
+    pm <- sum(sign(nr >= ruin))/n
+    return(pm-p)
+  }
 
+  res <- uniroot(fun,c(0,wealth/ruin*2))
+  sce <- scenariosCalculate(res$root)
+  return(list(res = res,scenarios = sce, nr = nrs(sce)))
 
-  # Make objectivefunction.
-  randData=matrix(rnorm(n = nScenarios*(minumumRuinTime+1), mu, sigma ),nrow = nScenarios)
-  return = t(apply(randData,1,function(x) exp(x)))
-  colnames(return) <- colnames(return, do.NULL = FALSE, prefix = "Time")
-  rownames(return) <- rownames(return, do.NULL = FALSE, prefix = "Scenario")
-
-  fun = ObjectivFunction(mat=return,wealth=wealth,target=minumumRuinTime,prc=probAdjusted)
-  # Send objectivefunction to root finder with bounds for sought premium.
-  res = uniroot(fun, c(0,1e10))
-
-  # Print the found premium, which will secure the lifelong payout, with prc probability.
-  return(res$root)
 }
-
-
-
