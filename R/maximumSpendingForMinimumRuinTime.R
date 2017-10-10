@@ -1,7 +1,7 @@
 #' Calculates scenarios of future value of annuity payments (fv) with stochastic returns
 #'
 #' @param wealth The wealth at retirement. Must be entered as a positive number
-#' @param minumumRuinTime
+#' @param minumumRuinTime Minimum time to ruin.  Must be entered as a positive integer
 #' @param mu The expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param sigma Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
 #' @param nScenarios The total number of scenarios to be made. Default is one scenario
@@ -9,9 +9,9 @@
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @export
 #' @examples
-#' maximumSpendingForMinumumRuinTime(wealth=14000,minumumRuinTime = 16,mu=0.03,sigma=0.08,nScenarios=200, prob = 0.9, seed =NULL)
+#' maximumSpendingForMinimumRuinTime(wealth=14000,minumumRuinTime = 16,mu=0.03,sigma=0.08,nScenarios=200, prob = 0.9, seed =NULL)
 #'
-maximumSpendingForMinumumRuinTime <- function(wealth=14000,
+maximumSpendingForMinimumRuinTime <- function(wealth=14000,
                                               minumumRuinTime=16,
                                               mu=0.03,
                                               sigma=0.08,
