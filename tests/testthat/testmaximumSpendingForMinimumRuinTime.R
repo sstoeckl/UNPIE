@@ -36,3 +36,40 @@ test_that("3 test annuity found by maximum spending for minimum ruintime with kn
   res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
   expect_equal(round(res$res$root,4), 543.6932)
 })
+
+test_that("4 test annuity found by maximum spending for minimum ruintime with known seed (scenarios)", {
+  wealth=10000
+  minumumRuinTime = 11
+  mu=0
+  sigma=0
+  nScenarios=1
+  prob = 0.999999
+  seed =1
+  res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
+  expect_equal(round(res$res$root,4),1000.0000)
+})
+
+test_that("5 test annuity found by maximum spending for minimum ruintime with known seed (scenarios)", {
+  wealth=10000
+  minumumRuinTime = 11
+  mu=0
+  sigma=0
+  nScenarios=1
+  prob = 1
+  seed =1
+  res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
+  expect_equal(round(res$res$root,4),0)
+})
+
+test_that("6 test annuity found by maximum spending for minimum ruintime with known seed (scenarios)", {
+  wealth=10000
+  minumumRuinTime = 30
+  mu=0.1
+  sigma=0.4
+  nScenarios=1000
+  prob = 0.4
+  seed =100
+  res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
+  expect_equal(round(res$res$root,4),201.0661)
+})
+

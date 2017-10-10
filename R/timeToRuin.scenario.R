@@ -12,9 +12,9 @@
 #' @export
 #' @examples
 #' timeToRuin.scenario(spending=100,nper=10,mu=0.01,sigma=0.01,wealth=1000,nScenarios=1000, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL)
-#'
-
 timeToRuin.scenario <- function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
+
+
   ##Type check
   if(!(is.ts(spending) || is.scalar(spending))) return(stop("spending must either be of type scalar or ts", call. = FALSE))
   if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))

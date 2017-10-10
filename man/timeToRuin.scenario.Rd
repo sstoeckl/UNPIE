@@ -32,5 +32,4 @@ Calculates scenarios of future value of annuity payments (fv) with stochastic re
 }
 \examples{
 timeToRuin.scenario(spending=100,nper=10,mu=0.01,sigma=0.01,wealth=1000,nScenarios=1000, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL)
-
 }
