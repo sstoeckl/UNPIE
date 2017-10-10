@@ -31,6 +31,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,
   }
 
   t <- minumumRuinTime
+  ruin <- minumumRuinTime
   n <- nScenarios
   p <- prob
 
