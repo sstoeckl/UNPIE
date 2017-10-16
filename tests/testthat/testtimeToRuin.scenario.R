@@ -37,7 +37,7 @@ test_that("02 test that timeToRuin.scenario returns a list with no scenarios and
 
 })
 
-test_that("02 test that timeToRuin.scenario returns a list with no scenarios and known result data with spending as ts", {
+test_that("03 test that timeToRuin.scenario returns a list with no scenarios and known result data with spending as ts", {
   res = timeToRuin.scenario(spending=ts(rep(1000,3)),nper=3,mu=1,sigma=1,wealth=1000,nScenarios=10, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =11082017)
   a=matrix(NA)
   expect_identical(round(res$Scenarios,digits = 5),round(a,digits = 5))
