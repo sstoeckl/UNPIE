@@ -30,7 +30,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,
       set.seed(seed)
   }
 
-  t <- minumumRuinTime
+  t <- minumumRuinTime + 5
   ruin <- minumumRuinTime
   n <- nScenarios
   p <- prob
@@ -60,7 +60,7 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,
   Up <- rf*wealth
 
   scenariosCalculate <- function(x){
-    return(Up - rc*x)
+      Up - rc*x
   }
 
   nrs <- function(scenarios){
@@ -70,27 +70,37 @@ maximumSpendingForMinumumRuinTime <- function(wealth=14000,
     return(nr)
   }
 
-  fun <- function(x){
-
+  # Normal case where sigma > 0 and prob < 1.
+  objectivFunction.Normal <- function(x){
     scenarios <- scenariosCalculate(x)
     nr <- nrs(scenarios)
     pm <- sum(sign(nr >= ruin))/n
     return(pm-p)
   }
 
-  funSigma0 <- function(x){
+  # Sigma = 0, simpler goalseeking.
+  objectivFunction.SigmaZero <- function(x){
     scenarios <- scenariosCalculate(x)
-    return(scenarios[1,ncol(scenarios)])
+    return(scenarios[1,ruin])
   }
 
-  #print(wealth/ruin*2)
+  # Probability = 1, since 0 payment will achive 1 we need
+  # approc
+  objectivFunction.ProbOne <- function(x){
+    scenarios <- scenariosCalculate(x)
+    nr <- nrs(scenarios)
+    return(min(nr/ruin)-1)
+  }
+
+  bounds <- c(0,wealth/ruin*2)
+  objfun <- objectivFunction.Normal
   if(sigma==0){
-    res <- uniroot(funSigma0,c(0,wealth))
-  }else{
-    res <- uniroot(fun,c(0,wealth))
+    objfun <- objectivFunction.SigmaZero
+  }else if(p == 1){
+    objfun <- objectivFunction.ProbOne
   }
 
-
+  res <- uniroot(objfun,bounds)
   sce <- scenariosCalculate(res$root)
   return(list(res = res,scenarios = sce, nr = nrs(sce)))
 
