@@ -22,7 +22,7 @@ test_that("2 test survival time of maximum spending for minimum ruintime with kn
   prob = 0.9
   seed =1
   res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
-  expect_equal(res$nr, c(16,16,16,16,11,16,16,16,16,16,16,16,16,16,16,16,13,16,16,16))
+  expect_equal(res$nr, c(21,21,21,16,11,21,21,21,19,21,21,21,21,21,21,21,13,21,17,21))
 })
 
 test_that("3 test annuity found by maximum spending for minimum ruintime with known seed (scenarios)", {
@@ -58,7 +58,7 @@ test_that("5 test annuity found by maximum spending for minimum ruintime with kn
   prob = 1
   seed =1
   res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
-  expect_equal(round(res$res$root,4),0)
+  expect_equal(round(res$res$root,4),1000.0000)
 })
 
 test_that("6 test annuity found by maximum spending for minimum ruintime with known seed (scenarios)", {
