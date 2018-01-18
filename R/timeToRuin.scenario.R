@@ -63,14 +63,15 @@ timeToRuin.scenario <- function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nS
   ruined = c(rep(NA,nScenarios))
   names(ruined) <- rownames(ruined, do.NULL = FALSE, prefix = "Scenario")
 
-
   for(scenario in 1:nScenarios){ #Calculates each scenario
     for(time in 1:nper){ #calculates principal
       scenarios[scenario,time+1] = -spending[time]+return[scenario,time]*scenarios[scenario,time]
     }
+    scenarios[scenarios < 0] = 0 # When ruined wealth becomes zero
     ruined[scenario] <- which(scenarios[scenario,] <= 0)[1]-1
-
   }
+
+
   quantileScenarios = t(apply(scenarios,2,quantile,probs=quantiles))
 
   if(returnScenarios){
