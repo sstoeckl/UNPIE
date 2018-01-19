@@ -13,7 +13,7 @@ test_that("02 FV single payment adj. for infl", {
 
   expect_equal(A[35],3946.08899421194)
   expect_equal(B[35],1973.15346187919)
-  expect_equal(B,infladj.single(a,0.02))
+  expect_equal(B,infladj(a,0.02))
   expect_equal(B,b)
 })
 
@@ -26,10 +26,10 @@ test_that("03 FV annuity nominal", {
 })
 
 test_that("04 FV const. ann. adj. for infl.", {
-  A = fv(rate=0.04,inflation=0.02, nper=35,pv=0,pmt=-1000,pmtinfladj=FALSE, pmtUltimo=TRUE)
+  A = fv(rate=0.04,inflation=.02, nper=35,pmt=-1000,pmtinfladj=FALSE, pmtUltimo=TRUE)
   B = fv.annuity(rate=0.04,inflation=.02, nper=35,pmt=-1000,pmtinfladj=FALSE, pmtUltimo=TRUE)
-  expect_equal(A[35],37327.1650067979)
-  expect_equal(B[35],37327.1650067979)
+  expect_equal(A[35],36828.1462129973)
+  expect_equal(B[35],36828.1462129973)
 })
 
 test_that("05 FV real ann. adj. for infl.", {

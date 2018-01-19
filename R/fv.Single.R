@@ -44,7 +44,7 @@ fv.single <- function(rate=0,inflation=0,nper=1,pv=0){
   fv = -pv*(1+accRate) ## non inflation adjusted
 
   if (any(inflation!=0)){
-    fv = infladj.single(fv,inflation,nper)
+    fv = infladj(fv,inflation,nper)
   }
   return(fv)
 }

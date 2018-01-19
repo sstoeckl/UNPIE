@@ -84,7 +84,7 @@ fv.annuity <- function(rate=0,inflation=0,nper=1,pmt=0,pmtinfladj=FALSE,pmtUltim
   fv = ts(-val,start = start,frequency = frequency)
 
   if (any(inflation!=0)){
-    fv = infladj.annuity(fv,rate,inflation,nper)
+    fv = infladj(fv,inflation,nper)
   }
   return(fv)
 

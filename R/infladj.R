@@ -5,11 +5,11 @@
 #' @param nper The total number of payment periods. Default is one period. If inflation is entered as ts nper is ignored.
 #' @export
 #' @examples
-#' infladj.single(fv=-1000,inflation=0.02, nper= 25)
+#' infladj(fv=-1000,inflation=0.02, nper= 25)
 
 
 
-infladj.single <- function(fv=1,inflation=0, nper=1){
+infladj <- function(fv=1,inflation=0, nper=1){
   ##Type check
   if(!(is.ts(inflation) || is.scalar(inflation))) return(stop("inflation must either be of type scalar or ts.",call. = FALSE))
   if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))
