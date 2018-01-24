@@ -102,6 +102,11 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
 
   res <- uniroot(objfun,bounds)
   sce <- scenariosCalculate(res$root)
-  return(list(res = res,scenarios = sce, nr = nrs(sce)))
 
+  for (i in 1:length(sce[,1])){
+    if(any(sce[i,] <= 0))
+    sce[i,which(sce[i,] <= 0)[1]:length(sce[1,])] = 0
+  }
+
+  return(list(res = res,scenarios = sce, nr = nrs(sce)))
 }

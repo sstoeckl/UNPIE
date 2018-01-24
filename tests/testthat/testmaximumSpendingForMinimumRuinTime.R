@@ -9,7 +9,7 @@ test_that("1 test final scenarios of maximum spending for minimum ruintime with 
   prob = 0.9
   seed =1
   res = maximumSpendingForMinimumRuinTime(wealth,minumumRuinTime,mu,sigma,nScenarios, prob, seed)
-  endScenarios = c(7224.432, 25784.773,33775.417, 717.387,4480.345,33039.937,13909.525,3310.917,3167.904,25975.294,18969.691,3490.610,10501.794,1480.161,11783.630,20740.086,-436.025,4828.274,5588.127, 20247.550)
+  endScenarios = c(7224.432, 25784.773,33775.417, 717.387,0,33039.937,13909.525,3310.917,3167.904,25975.294,18969.691,3490.610,10501.794,1480.161,11783.630,20740.086,0,4828.274,5588.127, 20247.550)
   expect_equal(endScenarios, round(res$scenarios[,16],3))
 })
 
