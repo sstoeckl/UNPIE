@@ -57,7 +57,7 @@ function(rate = 0, inflation = 0, nper = 1, fv=0){
 
 # @get /pv
 function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
-  unpie::pv(
+ unpie::pv(
     rate = as.numeric(rate),
     inflation = as.numeric(inflation),
     nper = as.numeric(nper),
@@ -107,7 +107,7 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 }
 
 #* @get /requiredSavingsForMinimumAnnuity
-function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE) {
+function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE) {
   unpie::requiredSavingsForMinimumAnnuity(
     nper = as.numeric(nper),
     mu = as.numeric(mu),
@@ -116,8 +116,9 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     nScenarios = as.numeric(nScenarios),
     minPayouy = as.numeric(minPayouy),
     prob = as.numeric(prob),
-    seed = as.numeric(seed)
-    print = as.logical(print)
+    seed = as.numeric(seed),
+    print = as.logical(print),
+    resturnScenarios = as.logical(returnScenarios)
   )
 
 }
@@ -131,12 +132,24 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
     sigma = as.numeric(sigma),
     wealth = as.numeric(wealth),
     nScenarios = as.numeric(nScenarios),
-    minPayouy = as.numeric(minPayouy),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
   )
 
+}
+
+#* @get /maximumSpendingForMinimumRuinTime
+function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
+  unpie::maximumSpendingForMinimumRuinTime(
+    wealth = as.numeric(wealth),
+    minumumRuinTime = as.numeric(minumumRuinTime),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    nScenarios = as.numeric(nScenarios),
+    prob = as.numeric(prob),
+    seed = as.numeric(seed)
+  )
 }
 
 #######################################################################################
@@ -213,7 +226,7 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 
   fv=pmtTemp[1]
 
-  return(fv)
+  return(c(fv,fvTemp))
 
 }
 
@@ -237,8 +250,6 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 
 
   pvTemp = pvTemp[as.numeric(nperWithdrawals)]
-  print(nperWithdrawals)
-  print(pvTemp)
 
   pv = unpie::pv.single(
     rate = as.numeric(realRate),
@@ -254,6 +265,94 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
     nper = as.numeric(nperSavings),
     fv = as.numeric(pv))[1]
 
-  return(pmt)
+  return(c(pmt,pvTemp))
 }
 
+#* @get /wrapper.add2
+function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE) {
+  res = unpie::requiredSavingsForMinimumAnnuity(
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    convRate = as.numeric(convRate),
+    nScenarios = as.numeric(nScenarios),
+    minPayouy = as.numeric(minPayouy),
+    prob = as.numeric(prob),
+    seed = as.numeric(seed),
+    print = as.logical(print),
+    resturnScenarios = as.logical(returnScenarios)
+  )
+
+  if (returnScenarios==TRUE){
+        temp=res$depot_scenariros[,ncol(res$depot_scenariros)]
+        res<-c(res,list(Future_value_sorted=sort(temp),Lifelong_pensions_sorted=sort(as.vector(res$lifelong_pensions))))
+    }
+  return(res)
+}
+
+#* @get /wrapper.fv.annuity.scenario
+function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
+
+  res = unpie::fv.annuity.scenario(
+    pmt = as.numeric(pmt),
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    convRate = as.numeric(convRate),
+    nScenarios = as.numeric(nScenarios),
+    returnScenarios = as.logical(returnScenarios),
+    quantiles = as.numeric(quantiles),
+    seed = as.numeric(seed)
+  )
+  if (returnScenarios==TRUE){
+        temp=tail(res$Scenarios,1)
+        res<-c(res,list(Future_value_sorted=sort(temp)))
+        }
+  return(res)
+
+}
+
+#* @get /wrapper.timeToRuin.scenario
+function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
+ res = unpie::timeToRuin.scenario(
+    spending = as.numeric(spending),
+    nper = as.numeric(nper),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    wealth = as.numeric(wealth),
+    nScenarios = as.numeric(nScenarios),
+    returnScenarios = as.logical(returnScenarios),
+    quantiles = as.numeric(quantiles),
+    seed = as.numeric(seed)
+  )
+  # Ruin time = last positive T plus 2, accounts for 0 index and ensure ruin by plus 1.
+  Time_ruin_vec = as.vector(res$LastYearWithPositiveWealth+2)
+  Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(nper)+1)]
+  # Get time
+  Ruin_time = unique(sort(Time_ruin_vec))
+  # Get accumulation
+  Ruin_count = sapply(Ruin_time, function(x) sum(x>=na.omit(Time_ruin_vec)))
+
+  res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
+
+  return(res)
+}
+
+#* @get /wrapper.add4
+function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
+  res = unpie::maximumSpendingForMinimumRuinTime(
+    wealth = as.numeric(wealth),
+    minumumRuinTime = as.numeric(minumumRuinTime),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    nScenarios = as.numeric(nScenarios),
+    prob = as.numeric(prob),
+    seed = as.numeric(seed)
+  )
+  Time_ruin_vec = as.vector(res$nr+1)
+  Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(minumumRuinTime)+5)]
+  Ruin_time = unique(sort(Time_ruin_vec))
+  Ruin_count = sapply(Ruin_time,function(x) sum(x>=na.omit(Time_ruin_vec)))
+  res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
+  return(res)
+}
