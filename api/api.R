@@ -4,12 +4,6 @@ cors <- function(res) {
     plumber::forward()
 }
 
-#* @preempt cors
-#* @get /myroute
-myRoute <- function() {
-    return("HELLO")
-}
-
 #* @get /fv
 #* @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
 #* @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
