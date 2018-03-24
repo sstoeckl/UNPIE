@@ -1,3 +1,9 @@
+#* @filter cors
+cors <- function(res) {
+    res$setHeader("Access-Control-Allow-Origin", "*") # Or whatever
+    plumber::forward()
+}
+
 #* @get /fv
 #* @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
 #* @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
