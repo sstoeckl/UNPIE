@@ -162,7 +162,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 function(rate=0,inflation=0,nper=1,pv=0)
 {
 
-  pv_new = as.numeric(pv)/(1+as.numeric(inflation))
+  pv_new = as.numeric(pv)
 
   pmt_infladj=unpie::fv.single(
     rate = as.numeric(inflation),
