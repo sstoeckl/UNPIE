@@ -275,7 +275,7 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 }
 
 #* @get /wrapper.add2
-function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE) {
+function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = nScenarios) {
   res = unpie::requiredSavingsForMinimumAnnuity(
     nper = as.numeric(nper),
     mu = as.numeric(mu),
@@ -290,9 +290,19 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
   )
 
   if (returnScenarios==TRUE){
-        temp=res$depot_scenariros[,ncol(res$depot_scenariros)]
-        res<-c(res,list(Future_value_sorted=sort(temp),Lifelong_pensions_sorted=sort(as.vector(res$lifelong_pensions))))
+
+    if (nScenarios<numberOfScenariosToReturn) {
+      numberOfScenariosToReturn = nScenarios
     }
+
+    randToPick = sample(nrow(res$depot_scenariros),numberOfScenariosToReturn) #Subset of scenarios are selected
+
+    res$depot_scenariros = res$depot_scenariros[randToPick,]
+
+    temp=res$depot_scenariros[,ncol(res$depot_scenariros)]
+
+    res<-c(res,list(Future_value_sorted=sort(temp),Lifelong_pensions_sorted=sort(as.vector(res$lifelong_pensions))))
+  }
   return(res)
 }
 
