@@ -30,7 +30,7 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
       set.seed(seed)
   }
 
-  t <- minumumRuinTime + 5
+  t <- minumumRuinTime + 50
   ruin <- minumumRuinTime
   n <- nScenarios
   p <- prob
@@ -39,7 +39,6 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
     nScenarios <- 1
     n <- 1
   }
-
 
   # Generate rates.
   r <- matrix(rnorm(nScenarios*t,mu,sigma),nScenarios,t)
@@ -50,8 +49,8 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
 
   # Lag one term.
   c <- rf
-  c[,2:t] <- c[,1:(t-1)]
-  c[,1] <- 0
+  #c[,2:t] <- c[,1:(t-1)]
+  #c[,1] <- 0
   # Sum compound rates to achive spending with compounding rates.
   # NB. will not work for a x_i only if x is constant.
   rc <- t(apply(c,1,function(x) cumsum(x)))
@@ -100,7 +99,7 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
     objfun <- objectivFunction.ProbOne
   }
 
-  res <- uniroot(objfun,bounds)
+  res <- uniroot(objfun,bounds,extendInt = "yes")
   sce <- scenariosCalculate(res$root)
 
   for (i in 1:length(sce[,1])){

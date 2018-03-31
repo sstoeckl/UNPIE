@@ -276,10 +276,15 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 
 #* @get /wrapper.add2
 function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = nScenarios) {
+
+  # Adjust rates reflect simple compounding as in previous apps
+  return = log(as.numeric(1+mu))
+  volatility = log(as.numeric(1+sigma))
+
   res = unpie::requiredSavingsForMinimumAnnuity(
     nper = as.numeric(nper),
-    mu = as.numeric(mu),
-    sigma = as.numeric(sigma),
+    mu = as.numeric(return),
+    sigma = as.numeric(volatility),
     convRate = as.numeric(convRate),
     nScenarios = as.numeric(nScenarios),
     minPayouy = as.numeric(minPayouy),
@@ -309,11 +314,15 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
 #* @get /wrapper.fv.annuity.scenario
 function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
 
+  # Adjust rates reflect simple compounding as in previous apps
+  return = log(as.numeric(1+mu))
+  volatility = log(as.numeric(1+sigma))
+
   res = unpie::fv.annuity.scenario(
     pmt = as.numeric(pmt),
     nper = as.numeric(nper),
-    mu = as.numeric(mu),
-    sigma = as.numeric(sigma),
+    mu = as.numeric(return),
+    sigma = as.numeric(volatility),
     convRate = as.numeric(convRate),
     nScenarios = as.numeric(nScenarios),
     returnScenarios = as.logical(returnScenarios),
@@ -330,6 +339,11 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 
 #* @get /wrapper.timeToRuin.scenario
 function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
+
+  # Adjust rates reflect simple compounding as in previous apps
+  return = log(as.numeric(1+mu))
+  volatility = log(as.numeric(1+sigma))
+
  res = unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
     nper = as.numeric(nper),
@@ -356,6 +370,23 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
 
 #* @get /wrapper.add4
 function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
+
+  # Adjust rates reflect simple compounding as in previous apps
+  return = log(as.numeric(1+mu))
+  volatility = log(as.numeric(1+sigma))
+
+  # Generates result to get stable estimate of Maximum admissible (real) periodic spending
+  res1 = unpie::maximumSpendingForMinimumRuinTime(
+    wealth = as.numeric(wealth),
+    minumumRuinTime = as.numeric(minumumRuinTime),
+    mu = as.numeric(mu),
+    sigma = as.numeric(sigma),
+    nScenarios = as.numeric(100),
+    prob = as.numeric(prob),
+    seed = as.numeric(100)
+  )
+
+  # Generates result to get few random scenarios
   res = unpie::maximumSpendingForMinimumRuinTime(
     wealth = as.numeric(wealth),
     minumumRuinTime = as.numeric(minumumRuinTime),
@@ -365,10 +396,21 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
     prob = as.numeric(prob),
     seed = as.numeric(seed)
   )
+
+  #Find x-axis
+  max = max(res$nr)+1
+  if (max>25) {
+    x_axis= min(max,49)+1
+  }else{
+    x_axis = 25
+  }
+
   Time_ruin_vec = as.vector(res$nr+1)
-  Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(minumumRuinTime)+5)]
+  Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(x_axis))]
   Ruin_time = unique(sort(Time_ruin_vec))
   Ruin_count = sapply(Ruin_time,function(x) sum(x>=na.omit(Time_ruin_vec)))
+  res$root = res1$root
+  res$scenarios=res$scenarios[,1:as.numeric(x_axis)]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
   return(res)
 }
