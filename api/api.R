@@ -407,7 +407,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
     x_axis = 25
   }
   # makin sure not to get uncomfortable arrays
-  if (length(res$scenarios[1,]<x_axis)) {
+  if (length(res$scenarios[1,])<x_axis) {
     x_axis =length(res$scenarios[1,]<x_axis)
   }
 
