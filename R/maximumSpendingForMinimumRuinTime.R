@@ -35,10 +35,10 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
   n <- nScenarios
   p <- prob
 
-  if(sigma==0){
-    nScenarios <- 1
-    n <- 1
-  }
+  #if(sigma==0){
+  #  nScenarios <- 1
+  #  n <- 1
+  #}
 
   # Generate rates.
   r <- matrix(rnorm(nScenarios*t,mu,sigma),nScenarios,t)
@@ -101,6 +101,7 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
 
   res <- uniroot(objfun,bounds,extendInt = "yes")
   sce <- scenariosCalculate(res$root)
+
 
   for (i in 1:length(sce[,1])){
     if(any(sce[i,] <= 0))

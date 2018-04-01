@@ -406,16 +406,17 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   }else{
     x_axis = 25
   }
+  # makin sure not to get uncomfortable arrays
+  if (length(res$scenarios[1,]<x_axis)) {
+    x_axis =length(res$scenarios[1,]<x_axis)
+  }
 
   Time_ruin_vec = as.vector(res$nr+1)
   Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(x_axis))]
   Ruin_time = unique(sort(Time_ruin_vec))
   Ruin_count = sapply(Ruin_time,function(x) sum(x>=na.omit(Time_ruin_vec)))
-  res$root = res1$root
+  res$res$root = res1$res$root
   x_axis = as.numeric(1:as.numeric(x_axis))
-  print(x_axis)
-  print("Empt")
-  print(dim(res$scenarios))
   res$scenarios=res$scenarios[,x_axis]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
   return(res)
