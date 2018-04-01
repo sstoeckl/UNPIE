@@ -325,9 +325,9 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     if (nScenarios<numberOfScenariosToReturn) {
       numberOfScenariosToReturn = nScenarios
     }
-
+    set.seed(NULL)
     randToPick = sample(nrow(res$depot_scenariros),numberOfScenariosToReturn) #Subset of scenarios are selected
-
+    res$lifelong_pensions = res$lifelong_pensions[randToPick]
     res$depot_scenariros = res$depot_scenariros[randToPick,]
 
     temp=res$depot_scenariros[,ncol(res$depot_scenariros)]
@@ -412,7 +412,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   Ruin_time = unique(sort(Time_ruin_vec))
   Ruin_count = sapply(Ruin_time,function(x) sum(x>=na.omit(Time_ruin_vec)))
   res$root = res1$root
-  res$scenarios=res$scenarios[,1:as.numeric(x_axis)]
+  res$scenarios=res$scenarios[,1:x_axis]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
   return(res)
 }
