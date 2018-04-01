@@ -274,8 +274,34 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
   return(c(pmt,pvTemp))
 }
 
+#* @get /wrapper.fv.annuity.scenario
+function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
+
+  # Adjust rates reflect simple compounding as in previous apps
+  return = log(as.numeric(1+mu))
+  volatility = log(as.numeric(1+sigma))
+
+  res = unpie::fv.annuity.scenario(
+    pmt = as.numeric(pmt),
+    nper = as.numeric(nper),
+    mu = as.numeric(return),
+    sigma = as.numeric(volatility),
+    convRate = as.numeric(convRate),
+    nScenarios = as.numeric(nScenarios),
+    returnScenarios = as.logical(returnScenarios),
+    quantiles = as.numeric(quantiles),
+    seed = as.numeric(seed)
+  )
+  if (returnScenarios==TRUE){
+    temp=tail(res$Scenarios,1)
+    res<-c(res,list(Future_value_sorted=sort(temp)))
+  }
+  return(res)
+
+}
+
 #* @get /wrapper.add2
-function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = nScenarios) {
+function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = 1) {
 
   # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(1+mu))
@@ -311,31 +337,6 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
   return(res)
 }
 
-#* @get /wrapper.fv.annuity.scenario
-function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
-
-  # Adjust rates reflect simple compounding as in previous apps
-  return = log(as.numeric(1+mu))
-  volatility = log(as.numeric(1+sigma))
-
-  res = unpie::fv.annuity.scenario(
-    pmt = as.numeric(pmt),
-    nper = as.numeric(nper),
-    mu = as.numeric(return),
-    sigma = as.numeric(volatility),
-    convRate = as.numeric(convRate),
-    nScenarios = as.numeric(nScenarios),
-    returnScenarios = as.logical(returnScenarios),
-    quantiles = as.numeric(quantiles),
-    seed = as.numeric(seed)
-  )
-  if (returnScenarios==TRUE){
-        temp=tail(res$Scenarios,1)
-        res<-c(res,list(Future_value_sorted=sort(temp)))
-        }
-  return(res)
-
-}
 
 #* @get /wrapper.timeToRuin.scenario
 function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
