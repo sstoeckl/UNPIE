@@ -402,9 +402,9 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   #Find x-axis
   max = max(res$nr)+1
   if (max<51 & max>25 ) {
-    x_axis= as.numeric(0:max+1)
+    x_axis= max+1
   }else{
-    x_axis = as.numeric(1:25)
+    x_axis = 25
   }
 
   Time_ruin_vec = as.vector(res$nr+1)
@@ -412,6 +412,10 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   Ruin_time = unique(sort(Time_ruin_vec))
   Ruin_count = sapply(Ruin_time,function(x) sum(x>=na.omit(Time_ruin_vec)))
   res$root = res1$root
+  x_axis = as.numeric(1:as.numeric(x_axis))
+  print(x_axis)
+  print("Empt")
+  print(dim(res$scenarios))
   res$scenarios=res$scenarios[,x_axis]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
   return(res)
