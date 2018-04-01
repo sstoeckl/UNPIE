@@ -416,7 +416,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   print(x_axis)
   print("Empt")
   print(dim(res$scenarios))
-  res$scenarios=res$scenarios[,x_axis]
+  #res$scenarios=res$scenarios[,x_axis]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
   return(res)
 }
