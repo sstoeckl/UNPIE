@@ -387,6 +387,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
     seed = as.numeric(100)
   )
 
+  set.seed(NULL)
   # Generates result to get few random scenarios
   res = unpie::maximumSpendingForMinimumRuinTime(
     wealth = as.numeric(wealth),
@@ -400,8 +401,8 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 
   #Find x-axis
   max = max(res$nr)+1
-  if (max>25) {
-    x_axis= min(max,49)+1
+  if (max<51 & max>25 ) {
+    x_axis= max+1
   }else{
     x_axis = 25
   }
