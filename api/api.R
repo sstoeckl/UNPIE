@@ -380,8 +380,8 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   res1 = unpie::maximumSpendingForMinimumRuinTime(
     wealth = as.numeric(wealth),
     minumumRuinTime = as.numeric(minumumRuinTime),
-    mu = as.numeric(mu),
-    sigma = as.numeric(sigma),
+    mu = as.numeric(return),
+    sigma = as.numeric(volatility),
     nScenarios = as.numeric(100),
     prob = as.numeric(prob),
     seed = as.numeric(100)
@@ -392,8 +392,8 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   res = unpie::maximumSpendingForMinimumRuinTime(
     wealth = as.numeric(wealth),
     minumumRuinTime = as.numeric(minumumRuinTime),
-    mu = as.numeric(mu),
-    sigma = as.numeric(sigma),
+    mu = as.numeric(return),
+    sigma = as.numeric(volatility),
     nScenarios = as.numeric(nScenarios),
     prob = as.numeric(prob),
     seed = as.numeric(seed)
