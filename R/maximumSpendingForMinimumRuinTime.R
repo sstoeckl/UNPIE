@@ -30,7 +30,7 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
       set.seed(seed)
   }
 
-  t <- minumumRuinTime+7
+  t <- minumumRuinTime + 50
   ruin <- minumumRuinTime
   n <- nScenarios
   p <- prob
