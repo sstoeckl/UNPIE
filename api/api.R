@@ -278,8 +278,8 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
 
   # Adjust rates reflect simple compounding as in previous apps
-  return = log(as.numeric(1+mu))
-  volatility = log(as.numeric(1+sigma))
+  return = log(as.numeric(mu)+1)
+  volatility = log(as.numeric(sigma)+1)
 
   res = unpie::fv.annuity.scenario(
     pmt = as.numeric(pmt),
@@ -304,8 +304,8 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = 1) {
 
   # Adjust rates reflect simple compounding as in previous apps
-  return = log(as.numeric(1+mu))
-  volatility = log(as.numeric(1+sigma))
+  return = log(as.numeric(mu)+1)
+  volatility = log(as.numeric(sigma)+1)
 
   res = unpie::requiredSavingsForMinimumAnnuity(
     nper = as.numeric(nper),
@@ -342,8 +342,8 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
 function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
 
   # Adjust rates reflect simple compounding as in previous apps
-  return = log(as.numeric(1+mu))
-  volatility = log(as.numeric(1+sigma))
+  return = log(as.numeric(mu)+1)
+  volatility = log(as.numeric(sigma)+1)
 
  res = unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
@@ -373,8 +373,8 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
 function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
 
   # Adjust rates reflect simple compounding as in previous apps
-  return = log(as.numeric(1+mu))
-  volatility = log(as.numeric(1+sigma))
+  return = log(as.numeric(mu)+1)
+  volatility = log(as.numeric(sigma)+1)
 
   # Generates result to get stable estimate of Maximum admissible (real) periodic spending
   res1 = unpie::maximumSpendingForMinimumRuinTime(
