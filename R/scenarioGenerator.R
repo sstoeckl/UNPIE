@@ -28,7 +28,12 @@ scenarioGenerator <- function(nper=25,nScenarios=1000,mean=0,sd=1,seed = NULL){
   randData[,1] = 0
   f = t(apply(randData,1,function(x) cumprod(x+1)))
   k = matrix(rep(seq(1:nper),nScenarios),ncol=nper,nrow=nScenarios,byrow = TRUE)
-  return(f*k)
+  if (nper == 1) {
+    return(k)
+  }else{
+    return(f*k)
+  }
+
 }
 
 

@@ -1,7 +1,7 @@
 #* @filter cors
 cors <- function(res) {
-    res$setHeader("Access-Control-Allow-Origin", "*") # Or whatever
-    plumber::forward()
+  res$setHeader("Access-Control-Allow-Origin", "*") # Or whatever
+  plumber::forward()
 }
 
 #* @get /fv
@@ -63,7 +63,7 @@ function(rate = 0, inflation = 0, nper = 1, fv=0){
 
 # @get /pv
 function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
- unpie::pv(
+  unpie::pv(
     rate = as.numeric(rate),
     inflation = as.numeric(inflation),
     nper = as.numeric(nper),
@@ -317,7 +317,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     prob = as.numeric(prob),
     seed = as.numeric(seed),
     print = as.logical(print),
-    resturnScenarios = as.logical(returnScenarios)
+    returnScenarios = as.logical(returnScenarios)
   )
 
   if (returnScenarios==TRUE){
@@ -325,12 +325,18 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     if (nScenarios<numberOfScenariosToReturn) {
       numberOfScenariosToReturn = nScenarios
     }
+
     set.seed(NULL)
-    randToPick = sample(nrow(res$depot_scenariros),numberOfScenariosToReturn) #Subset of scenarios are selected
+    randToPick = sample(nScenarios,numberOfScenariosToReturn) #Subset of scenarios are selected
     res$lifelong_pensions = res$lifelong_pensions[randToPick]
     res$depot_scenariros = res$depot_scenariros[randToPick,]
+    if(nper ==1){
+      temp=res$depot_scenariros[nper]
 
-    temp=res$depot_scenariros[,ncol(res$depot_scenariros)]
+    }else{
+      temp=res$depot_scenariros[,nper]
+    }
+
 
     res<-c(res,list(Future_value_sorted=sort(temp),Lifelong_pensions_sorted=sort(as.vector(res$lifelong_pensions))))
   }
@@ -345,7 +351,7 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
   return = log(as.numeric(mu)+1)
   volatility = log(as.numeric(sigma)+1)
 
- res = unpie::timeToRuin.scenario(
+  res = unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
     nper = as.numeric(nper),
     mu = as.numeric(mu),

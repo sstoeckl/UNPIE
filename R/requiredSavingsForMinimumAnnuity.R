@@ -9,13 +9,13 @@
 #' @param prob Probability to reach minimum desired yearly pension payout. Must be entered as decimal
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
 #' @param print Should the scenarios be displayed in plot
-#' @param resturnScenarios Should the scenarios be returned in a matrix
+#' @param returnScenarios Should the scenarios be returned in a matrix
 #' @import graphics
 #' @export
 #' @examples
 #' requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,resturnScenarios=FALSE)
 
-requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy=1000,prob=0.95,seed=NULL,print=FALSE, resturnScenarios=FALSE) {
+requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy=1000,prob=0.95,seed=NULL,print=FALSE, returnScenarios=FALSE) {
   ##Type check
 
   if(!is.scalar(nper)) return(stop("nper must be of type scalar",call. = FALSE))
@@ -68,7 +68,7 @@ requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScen
   ss = sU*convRate
   result=res$root
 
-  if (resturnScenarios){
+  if (returnScenarios){
     result <- list(perodic_savings = res$root, depot_scenariros = sU,lifelong_pensions = ss[,nper])
   }
 

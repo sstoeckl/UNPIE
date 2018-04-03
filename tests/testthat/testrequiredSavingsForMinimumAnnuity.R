@@ -48,7 +48,7 @@ test_that("4 test required savings for minimum annuity with scenarios", {
   minPayouy=10000
   prob = 0.55
   seed =1
-  res = requiredSavingsForMinimumAnnuity(nper,mu,sigma,convRate,nScenarios,minPayouy, prob, seed,print=FALSE, resturnScenarios = TRUE)
+  res = requiredSavingsForMinimumAnnuity(nper,mu,sigma,convRate,nScenarios,minPayouy, prob, seed,print=FALSE, returnScenarios = TRUE)
   expect_equal(10646.649, round(res$lifelong_pensions[[5]],3))
   expect_equal(212932.985, round(res$depot_scenariros[5,30],3))
   expect_equal(392.2286, round(res$perodic_savings,4))
