@@ -13,7 +13,7 @@
 #' @import graphics
 #' @export
 #' @examples
-#' requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,resturnScenarios=FALSE)
+#' requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE)
 
 requiredSavingsForMinimumAnnuity<- function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy=1000,prob=0.95,seed=NULL,print=FALSE, returnScenarios=FALSE) {
   ##Type check
