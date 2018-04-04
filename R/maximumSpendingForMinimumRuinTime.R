@@ -93,7 +93,7 @@ maximumSpendingForMinimumRuinTime <- function(wealth=14000,
 
   bounds <- c(0,wealth/ruin*2)
   objfun <- objectivFunction.Normal
-  if(sigma==0){
+  if(sigma==0 || minumumRuinTime <= 1 ){
     objfun <- objectivFunction.SigmaZero
   }else if(p == 1){
     objfun <- objectivFunction.ProbOne

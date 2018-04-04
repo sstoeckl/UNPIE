@@ -6,7 +6,7 @@
 \usage{
 requiredSavingsForMinimumAnnuity(nper = 1, mu = 0, sigma = 0,
   convRate = 1, nScenarios = 1, minPayouy = 1000, prob = 0.95,
-  seed = NULL, print = FALSE, resturnScenarios = FALSE)
+  seed = NULL, print = FALSE, returnScenarios = FALSE)
 }
 \arguments{
 \item{nper}{The total number of payment periods. Default is one period}
@@ -27,11 +27,11 @@ requiredSavingsForMinimumAnnuity(nper = 1, mu = 0, sigma = 0,
 
 \item{print}{Should the scenarios be displayed in plot}
 
-\item{resturnScenarios}{Should the scenarios be returned in a matrix}
+\item{returnScenarios}{Should the scenarios be returned in a matrix}
 }
 \description{
 Finds the required savings for minimum annuity
 }
 \examples{
-requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,resturnScenarios=FALSE)
+requiredSavingsForMinimumAnnuity(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE)
 }
