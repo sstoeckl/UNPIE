@@ -303,22 +303,36 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 #* @get /wrapper.add2
 function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = 1) {
 
-  # Adjust rates reflect simple compounding as in previous apps
+    # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(mu)+1)
   volatility = log(as.numeric(sigma)+1)
 
+  nper = as.numeric(nper)
+  mu = as.numeric(return)
+  sigma = as.numeric(volatility)
+  convRate = as.numeric(convRate)
+  nScenarios = as.numeric(nScenarios)
+  minPayouy = as.numeric(minPayouy)
+  prob = as.numeric(prob)
+  seed = as.numeric(seed)
+  print = as.logical(print)
+  returnScenarios = as.logical(returnScenarios)
+
+
   res = unpie::requiredSavingsForMinimumAnnuity(
-    nper = as.numeric(nper),
+    nper = nper,
     mu = as.numeric(return),
     sigma = as.numeric(volatility),
-    convRate = as.numeric(convRate),
-    nScenarios = as.numeric(nScenarios),
-    minPayouy = as.numeric(minPayouy),
-    prob = as.numeric(prob),
-    seed = as.numeric(seed),
-    print = as.logical(print),
-    returnScenarios = as.logical(returnScenarios)
+    convRate = convRate,
+    nScenarios = nScenarios,
+    minPayouy = minPayouy,
+    prob = prob,
+    seed = seed,
+    print = print,
+    returnScenarios = returnScenarios
   )
+  numberOfScenariosToReturn = as.numeric(numberOfScenariosToReturn)
+  nScenarios = as.numeric(nScenarios)
 
   if (returnScenarios==TRUE){
 
@@ -327,6 +341,8 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     }
 
     set.seed(NULL)
+    print(nScenarios)
+    print(numberOfScenariosToReturn)
     randToPick = sample(nScenarios,numberOfScenariosToReturn) #Subset of scenarios are selected
     res$lifelong_pensions = res$lifelong_pensions[randToPick]
     res$depot_scenariros = res$depot_scenariros[randToPick,]
@@ -382,27 +398,35 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   return = log(as.numeric(mu)+1)
   volatility = log(as.numeric(sigma)+1)
 
+  wealth = as.numeric(wealth)
+  minumumRuinTime = as.numeric(minumumRuinTime)
+  mu = as.numeric(return)
+  sigma = as.numeric(volatility)
+  nScenarios = as.numeric(nScenarios)
+  prob = as.numeric(prob)
+  seed = as.numeric(seed)
+
   # Generates result to get stable estimate of Maximum admissible (real) periodic spending
   res1 = unpie::maximumSpendingForMinimumRuinTime(
-    wealth = as.numeric(wealth),
-    minumumRuinTime = as.numeric(minumumRuinTime),
-    mu = as.numeric(return),
-    sigma = as.numeric(volatility),
-    nScenarios = as.numeric(100),
-    prob = as.numeric(prob),
-    seed = as.numeric(100)
+    wealth = wealth,
+    minumumRuinTime = minumumRuinTime,
+    mu = return,
+    sigma = volatility,
+    nScenarios = 100,
+    prob = prob,
+    seed = 100
   )
 
   set.seed(NULL)
   # Generates result to get few random scenarios
   res = unpie::maximumSpendingForMinimumRuinTime(
-    wealth = as.numeric(wealth),
-    minumumRuinTime = as.numeric(minumumRuinTime),
-    mu = as.numeric(return),
-    sigma = as.numeric(volatility),
-    nScenarios = as.numeric(nScenarios),
-    prob = as.numeric(prob),
-    seed = as.numeric(seed)
+    wealth = wealth,
+    minumumRuinTime = minumumRuinTime,
+    mu = return,
+    sigma = volatility,
+    nScenarios = nScenarios,
+    prob = prob,
+    seed = seed
   )
 
   #Find x-axis
