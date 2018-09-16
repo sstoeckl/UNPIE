@@ -4,15 +4,16 @@ cors <- function(res) {
   plumber::forward()
 }
 
-#* @get /fv
-#* @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
-#* @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
-#* @param nper:int The total number of payment periods. Default is one period.
-#* @param pv:numeric The present value of single investment made today. Default is assumed to be zero. Must be entered as a negative number.
-#* @param pmt:numeric The payment made each period (annuity). Must be entered as a negative number.
-#* @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
-#* @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
-function(rate=0,inflation=0, nper=1,pv=0,pmt=0,pmtinfladj=FALSE, pmtUltimo=TRUE){
+#' Returns the future value of a single payment and annuity payments (fv)
+#' @get /fv
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param pv:numeric The present value of single investment made today. Default is assumed to be zero. Must be entered as a negative number.
+#' @param pmt:numeric The payment made each period (annuity). Must be entered as a negative number.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
+function(rate=0,inflation=0, nper=1,pv=0,pmt=0,pmtinfladj=FALvSE, pmtUltimo=TRUE){
   unpie::fv(
     rate = as.numeric(rate),
     inflation = as.numeric(inflation),
@@ -25,7 +26,12 @@ function(rate=0,inflation=0, nper=1,pv=0,pmt=0,pmtinfladj=FALSE, pmtUltimo=TRUE)
 
 }
 
-#* @get /fv.single
+#' Returns the future value of an single payment (fv)
+#' @get /fv.single
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param pv:numeric The present value of single payment made today. Default is assumed to be zero. Must be entered as a negative number
 function(rate = 0, inflation = 0, nper = 1, pv = 0){
   unpie::fv.single(
     rate = as.numeric(rate),
@@ -36,7 +42,14 @@ function(rate = 0, inflation = 0, nper = 1, pv = 0){
 
 }
 
-#* @get /fv.annuity
+#' Returns the future value of annuity payments (fv)
+#' @get /fv.annuity
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param pmt:numeric The payment made each period (annuity). Must be entered as a negative number.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
 function(rate = 0, inflation = 0, nper = 1, pmt = 0,
          pmtinfladj = FALSE, pmtUltimo = TRUE){
   unpie::fv.annuity(
@@ -50,7 +63,12 @@ function(rate = 0, inflation = 0, nper = 1, pmt = 0,
 
 }
 
-#* @get /pmt
+#' Returns the payment (eg. on loan) based on constant payments and a constant interest rate
+#' @get /pmt
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param fv:numeric The future value of single payment (spending) made in the future. Default is assumed to be zero. Must be entered as a negative number
 function(rate = 0, inflation = 0, nper = 1, fv=0){
   unpie::pmt(
     rate = as.numeric(rate),
@@ -61,7 +79,15 @@ function(rate = 0, inflation = 0, nper = 1, fv=0){
 
 }
 
-# @get /pv
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /pv
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param fv:numeric The future value of single spending made in the future. Default is assumed to be zero. Must be entered as a negative number.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
 function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
   unpie::pv(
     rate = as.numeric(rate),
@@ -74,7 +100,14 @@ function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0, pmtinfladj = FALSE,
   )
 }
 
-#* @get /pv.annuity
+#' Returns the present value of annuity payments (spending) made in the future (fv)
+#' @get /pv.annuity
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal
+#' @param nper:int The total number of payment periods. Default is one period
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
 function(rate = 0, inflation = 0, nper = 1, pmt = 0,pmtinfladj = FALSE, pmtUltimo = TRUE){
   unpie::pv.annuity(
     rate = as.numeric(rate),
@@ -86,7 +119,12 @@ function(rate = 0, inflation = 0, nper = 1, pmt = 0,pmtinfladj = FALSE, pmtUltim
   )
 }
 
-#* @get /pv.single
+#' Returns the present value of an single payment (pv)
+#' @get /pv.single
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param fv:numeric The future value of single payment (spending) made in the future. Default is assumed to be zero. Must be entered as a negative number
 function(rate = 0, inflation = 0, nper = 1, fv = 0){
   unpie::pv.single(
     rate = as.numeric(rate),
@@ -96,7 +134,16 @@ function(rate = 0, inflation = 0, nper = 1, fv = 0){
   )
 }
 
-#* @get /fv.annuity.scenario
+#' Calculates scenarios of future value of annuity payments (fv) with stochastic returns
+#' @get /fv.annuity.scenario
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
+#' @param nper:int The total number of payment periods. Default is one period
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param convRate:numeric The conversion rate. Default is one. Must be entered as decimal
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario
+#' @param returnScenarios:logical Should the scenarios be returned
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
   unpie::fv.annuity.scenario(
     pmt = as.numeric(pmt),
@@ -112,7 +159,18 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 
 }
 
-#* @get /requiredSavingsForMinimumAnnuity
+#' Finds the required savings for minimum annuity
+#' @get /requiredSavingsForMinimumAnnuity
+#' @param nper:int The total number of payment periods. Default is one period
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param convRate:numeric The conversion rate. Default is one. Must be entered as decimal
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario
+#' @param minPayouy:numeric The minimum desired yearly pension payout/target.
+#' @param prob:numeric Probability to reach minimum desired yearly pension payout. Must be entered as decimal
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
+#' @param print:logical  Should the scenarios be displayed in plot
+#' @param returnScenarios:logical Should the scenarios be returned in a matrix
 function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE) {
   unpie::requiredSavingsForMinimumAnnuity(
     nper = as.numeric(nper),
@@ -124,12 +182,21 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     prob = as.numeric(prob),
     seed = as.numeric(seed),
     print = as.logical(print),
-    resturnScenarios = as.logical(returnScenarios)
+    returnScenarios = as.logical(returnScenarios)
   )
 
 }
 
-#* @get /timeToRuin.scenario
+#' Calculates scenarios of future value of annuity payments (fv) with stochastic returns
+#' @get /timeToRuin.scenario
+#' @param spending:numeric The annual spending. Must be given as negative number.
+#' @param nper:int The planing horizon.
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param wealth:numeric The wealth at retirement. Must be entered as a positive number
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario
+#' @param returnScenarios:logical Should the scenarios be returned
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
   unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
@@ -145,7 +212,15 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
 
 }
 
-#* @get /maximumSpendingForMinimumRuinTime
+#' Calculates scenarios of future value of annuity payments (fv) with stochastic returns
+#' @get /maximumSpendingForMinimumRuinTime
+#' @param wealth:numeric The wealth at retirement. Must be entered as a positive number
+#' @param minumumRuinTime:int Minimum time to ruin.  Must be entered as a positive integer
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario
+#' @param prob:numeric Probability to exceed minimum time to ruin. Must be entered as decimal.
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
   unpie::maximumSpendingForMinimumRuinTime(
     wealth = as.numeric(wealth),
@@ -164,7 +239,13 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 #######################################################################################
 #######################################################################################
 
-#* @get /wrapper.case5
+
+
+#' @get /wrapper.case5
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param pv:numeric The present value of single payment made today. Default is assumed to be zero. Must be entered as a negative number.
 function(rate=0,inflation=0,nper=1,pv=0)
 {
 
@@ -186,7 +267,11 @@ function(rate=0,inflation=0,nper=1,pv=0)
 
 }
 
-#* @get /wrapper.case7
+#' @get /wrapper.case7
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
 function(rate=0,inflation=0,nper=1,pmt=0)
 {
 
@@ -209,7 +294,12 @@ function(rate=0,inflation=0,nper=1,pmt=0)
 }
 
 
-#* @get /wrapper.case8
+#' @get /wrapper.case8
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nperSavings:int The savings horizon.
+#' @param nperWithdrawals:int  The withdrawls horizon.
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
 function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 {
 
@@ -236,7 +326,12 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 
 }
 
-#* @get /wrapper.case9
+#' @get /wrapper.case9
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nperSavings:int The savings horizon.
+#' @param nperWithdrawals:int  The withdrawls horizon.
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
 function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 {
 
@@ -274,7 +369,15 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
   return(c(pmt,pvTemp))
 }
 
-#* @get /wrapper.fv.annuity.scenario
+#' @get /wrapper.fv.annuity.scenario
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
+#' @param nper:int The planning horizon.
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal.
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal.
+#' @param convRate:numeric The conversion rate. Default is one. Must be entered as decimal.
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario.
+#' @param returnScenarios:logical Should scenarios be returned in the response.
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FALSE, quantiles=c(0,0.25,0.5,0.75,1), seed =NULL){
 
   # Adjust rates reflect simple compounding as in previous apps
@@ -300,7 +403,18 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 
 }
 
-#* @get /wrapper.add2
+#' @get /wrapper.add2
+#' @param nper:int The planning horizon.
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal.
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal.
+#' @param convRate:numeric The conversion rate. Default is one. Must be entered as decimal.
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario.
+#' @param minPayouy:numeric The minimum desired yearly pension payout/target.
+#' @param prob:numeric Probability to reach minimum desired yearly pension payout. Must be entered as decimal
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
+#' @param print:logical  Should the scenarios be displayed in plot
+#' @param returnScenarios:logical Should scenarios be returned in the response.
+#' @param numberOfScenariosToReturn:numeric How many scenarios should be returned
 function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.95, seed =NULL,print=FALSE,returnScenarios=FALSE, numberOfScenariosToReturn = 1) {
 
     # Adjust rates reflect simple compounding as in previous apps
@@ -360,7 +474,15 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
 }
 
 
-#* @get /wrapper.timeToRuin.scenario
+#' @get /wrapper.timeToRuin.scenario
+#' @param spending:numeric The annual spending. Must be given as negative number.
+#' @param nper:int The planing horizon.
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param wealth:numeric The wealth at retirement. Must be entered as a positive number
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario.
+#' @param returnScenarios:logical Should scenarios be returned in the response.
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScenarios = FALSE,quantiles=c(0,0.25,0.5,0.75,1), seed =NULL) {
 
   # Adjust rates reflect simple compounding as in previous apps
@@ -391,7 +513,14 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
   return(res)
 }
 
-#* @get /wrapper.add4
+#' @get /wrapper.add4
+#' @param wealth:numeric The wealth at retirement. Must be entered as a positive number
+#' @param minumumRuinTime:int Minimum time to ruin.  Must be entered as a positive integer
+#' @param mu:numeric The expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param sigma:numeric Volatility of expected interest real return per period. Default is zero. Must be entered as decimal
+#' @param nScenarios:int The total number of scenarios to be made. Default is one scenario
+#' @param prob:numeric Probability to exceed minimum time to ruin. Must be entered as decimal.
+#' @param seed:int Integer vector, containing the random number generator (RNG) state for random number generation in R
 function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95, seed=1) {
 
   # Adjust rates reflect simple compounding as in previous apps
