@@ -12,7 +12,7 @@
 #' @param K Wealth at retirement
 #' @export
 #' @examples
-#' gompertzMakehamMortality(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0sigma=0,B=100,K=1000)
+#' gompertzMakehamMortality(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,sigma=0,inflation=0,B=100,K=1000)
 
 gompertzMakehamMortality <- function(x,lambda,m,b,t=0,r=0,sigma=0,inflation=0,B=0,K=0){
 

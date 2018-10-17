@@ -149,7 +149,7 @@ test_that("9m Savings required to finance given life-long continuous spending (b
   m=82.3
   b=11.4
   r=0.03
-  inflatiion=0.01
+  inflation=0.01
   pmt=100
 
   r_real=rate.real(0.03,0.01)
@@ -206,7 +206,7 @@ test_that("16n Moments and conditional survival probabilities for the Gompertz-M
   m=82.3
   b=11.4
   r=0.03
-  infl=0.01
+  inflation=0.01
   sigma = 0.08
   B = 100
   K = 1000

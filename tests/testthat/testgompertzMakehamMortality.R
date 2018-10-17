@@ -6,6 +6,6 @@ test_that("1 test that Gompertz-Makeham Law of Mortality implementation runs", {
   m=82.3
   b=11.4
   rc=0.01
-  res = gompertzMakehamMortality(x,lambda,m,b,rc = rc)
+  res = gompertzMakehamMortality(x,lambda,m,b,rc)
   expect_equal(length(res),11)
 })
