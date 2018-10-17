@@ -13,7 +13,7 @@ cors <- function(res) {
 #' @param pmt:numeric The payment made each period (annuity). Must be entered as a negative number.
 #' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
 #' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
-function(rate=0,inflation=0, nper=1,pv=0,pmt=0,pmtinfladj=FALvSE, pmtUltimo=TRUE){
+function(rate=0,inflation=0, nper=1,pv=0,pmt=0,pmtinfladj=FALSE, pmtUltimo=TRUE){
   unpie::fv(
     rate = as.numeric(rate),
     inflation = as.numeric(inflation),
@@ -39,7 +39,6 @@ function(rate = 0, inflation = 0, nper = 1, pv = 0){
     nper = as.numeric(nper),
     pv = as.numeric(pv)
   )
-
 }
 
 #' Returns the future value of annuity payments (fv)
@@ -300,8 +299,7 @@ function(rate=0,inflation=0,nper=1,pmt=0)
 #' @param nperSavings:int The savings horizon.
 #' @param nperWithdrawals:int  The withdrawls horizon.
 #' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
-function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
-{
+function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0){
 
   fvTemp = unpie::fv(
     rate = as.numeric(rate),
@@ -332,8 +330,7 @@ function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
 #' @param nperSavings:int The savings horizon.
 #' @param nperWithdrawals:int  The withdrawls horizon.
 #' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
-function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0)
-{
+function(rate=0,inflation=0,nperSavings=1,nperWithdrawals=0,pmt=0){
 
   realRate = unpie::rate.real(
     nominalRate = as.numeric(rate),
@@ -578,5 +575,274 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   x_axis = as.numeric(1:as.numeric(x_axis))
   res$scenarios=res$scenarios[,x_axis]
   res<-c(res,list(Ruin_time=Ruin_time, Ruin_count=Ruin_count))
+  return(res)
+}
+
+#' Calculates a variety of morality parameters given by Gompertz-Makeham Law of Mortality
+#' @get /gompertzMakehamMortality
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t:numeric number of additional years
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param sigma:numeric Standard deviation of annualized real log returns
+#' @param inflation:numeric Inflation rate i (annual compounding)
+#' @param B:numeric Constant continuous real spending at rate
+#' @param K:numeric Wealth at retirement
+function(x=65,lambda=0,m=82.3,b=11.4,t=10,rc=0.01,sigma=0,inflation=0,B=100,K=1000){
+  GM =unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(t),
+    r = as.numeric(r),
+    sigma = as.numeric(sigma),
+    inflation = as.numeric(inflation),
+    B = as.numeric(B),
+    K = as.numeric(K)
+  )
+  return(GM)
+}
+
+#' @get /wrapper.case7m
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param inflation:numeric Inflation rate i (annual compounding)
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
+#' @param convRate:numeric The conversion rate. Default is one. Must be entered as decimal
+function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0,pmt=0,convRate=1){
+
+  GM_nominal = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(0),
+    r = as.numeric(r),
+    sigma = as.numeric(0),
+    inflation = as.numeric(inflation),
+    B = as.numeric(0),
+    K = as.numeric(0)
+  )
+
+  GM_real = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(0),
+    r = as.numeric(r),
+    sigma = as.numeric(0),
+    inflation = as.numeric(inflation),
+    B = as.numeric(0),
+    K = as.numeric(0)
+  )
+
+
+  required_wealth_to_finance_constant_nominal_periodic_spending = as.numeric(pmt) * as.numeric(GM_nominal$`Annuity factor`)
+  required_wealth_to_finance_constant_real_periodic_spending = as.numeric(pmt) * as.numeric(GM_real$`Annuity factor`)
+
+  required_wealth_to_finance_constant_nominal_periodic_spending_reference = as.numeric(pmt)*1/as.numeric(convRate)
+  required_wealth_to_finance_constant_real_periodic_spending_reference = as.numeric(pmt)*1/as.numeric(convRate)
+
+  expected_remaining_lifetime = as.numeric(GM_real$`Expected remaining lifetime`)
+
+  fair_conversion_rate = 1/as.numeric(GM_real$`Annuity factor`)
+
+  res = list(required_wealth_to_finance_constant_nominal_periodic_spending,
+             required_wealth_to_finance_constant_real_periodic_spending,
+             required_wealth_to_finance_constant_nominal_periodic_spending_reference,
+             required_wealth_to_finance_constant_real_periodic_spending_reference,
+             expected_remaining_lifetime,
+             fair_conversion_rate)
+
+  names(res) = c("required_wealth_to_finance_constant_nominal_periodic_spending",
+                 "required_wealth_to_finance_constant_real_periodic_spending",
+                 "required_wealth_to_finance_constant_nominal_periodic_spending_reference",
+                 "required_wealth_to_finance_constant_real_periodic_spending_reference",
+                 "expected_remaining_lifetime",
+                 "fair_conversion_rate")
+  return(res)
+}
+
+#' @get /wrapper.case8m
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t:numeric number of additional years
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param inflation:numeric Inflation rate i (annual compounding)
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
+function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
+
+    GM = unpie::gompertzMakehamMortality(
+      x = as.numeric(x),
+      lambda = as.numeric(lambda),
+      m = as.numeric(m),
+      b = as.numeric(b),
+      t = as.numeric(t),
+      r = as.numeric(r),
+      sigma = as.numeric(0),
+      inflation = as.numeric(inflation),
+      B = as.numeric(0),
+      K = as.numeric(0)
+    )
+
+    realRate = unpie::rate.real(
+      nominalRate = as.numeric(r),
+      inflation = as.numeric(inflation)
+    )
+
+    fv_real = unpie::fv.annuity(
+      rate = as.numeric(realRate),
+      inflation = as.numeric(0),
+      nper = as.numeric(t),
+      pmt = as.numeric(pmt),
+      pmtinfladj = as.logical(FALSE),
+      pmtUltimo = as.logical(FALSE)
+    )
+
+    fair_conversion_rate =  1/as.numeric(GM$`Annuity factor`)
+    expected_remaining_lifetime = GM$`Expected remaining lifetime`
+    future_wealth = fv_real[as.numeric(t)]
+    annual_constant_continuous_real_spending = future_wealth * fair_conversion_rate
+    res = list(future_wealth,annual_constant_continuous_real_spending,expected_remaining_lifetime,fair_conversion_rate)
+    names(res) = c("future_wealth","annual_constant_continuous_real_spending","expected_remaining_lifetime","fair_conversion_rate")
+    return(res)
+  }
+
+#' @get /wrapper.case9m
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t:numeric number of additional years
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param inflation:numeric Inflation rate i (annual compounding)
+#' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
+function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
+
+  GM = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(t),
+    r = as.numeric(r),
+    sigma = as.numeric(0),
+    inflation = as.numeric(inflation),
+    B = as.numeric(0),
+    K = as.numeric(0)
+  )
+
+  realRate = unpie::rate.real(
+    nominalRate = as.numeric(r),
+    inflation = as.numeric(inflation)
+  )
+
+  requiredWealth = as.numeric(pmt) * as.numeric(GM$`Annuity factor`)
+  constant_real_yearly_savings_payment = requiredWealth*realRate/((1+realRate)^t-1)
+  fair_conversion_rate =  1/as.numeric(GM$`Annuity factor`)
+  expected_remaining_lifetime = as.numeric(GM$`Expected remaining lifetime`)
+
+  res = list(requiredWealth,constant_real_yearly_savings_payment,fair_conversion_rate,expected_remaining_lifetime)
+  names(res) = c("requiredWealth","constant_real_yearly_savings_payment","fair_conversion_rate","expected_remaining_lifetime")
+  return(res)
+}
+
+#' @get /wrapper.case14n
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param inflation:numeric Inflation rate i (annual compounding)
+function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0){
+
+  GM = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(0),
+    r = as.numeric(r),
+    sigma = as.numeric(0),
+    inflation = as.numeric(inflation),
+    B = as.numeric(0),
+    K = as.numeric(0)
+  )
+
+  fair_conversion_rate =  1/as.numeric(GM$`Annuity factor`)
+
+  res = list(fair_conversion_rate)
+  names(res) = c("fair_conversion_rate")
+  return(res)
+}
+
+#' @get /wrapper.case15n
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param r:numeric Interest rate r (annual compounding)
+#' @param sigma:numeric Standard deviation of annualized real log returns
+#' @param inflation:numeric Inflation rate i (annual compounding)
+#' @param B:numeric Constant continuous real spending at rate
+#' @param K:numeric Wealth at retirement
+function(x=65,lambda=0,m=82.3,b=11.4,rc=0.01,sigma=0,inflation=0,B=100,K=1000){
+  GM = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(0),
+    r = as.numeric(r),
+    sigma = as.numeric(sigma),
+    inflation = as.numeric(inflation),
+    B = as.numeric(B),
+    K = as.numeric(K)
+  )
+
+  mortality_rate = as.numeric(GM$`Mortality Rate`)
+  probability_of_retirement_ruin_when_starting_at_wealth_w = as.numeric(GM$`Probability of retirement ruin when starting at wealth w`)
+
+  res = list(mortality_rate,probability_of_retirement_ruin_when_starting_at_wealth_w)
+  names(res) = c("mortality_rate","probability_of_retirement_ruin_when_starting_at_wealth_w")
+  return(res)
+}
+
+#' @get /wrapper.case16n
+#' @param x:numeric Annuitant’s age x in years.
+#' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t:numeric number of additional years
+
+function(x=65,lambda=0,m=82.3,b=11.4,t=10){
+  GM = unpie::gompertzMakehamMortality(
+    x = as.numeric(x),
+    lambda = as.numeric(lambda),
+    m = as.numeric(m),
+    b = as.numeric(b),
+    t = as.numeric(t),
+    r = as.numeric(0),
+    sigma = as.numeric(0),
+    inflation = as.numeric(0),
+    B = as.numeric(0),
+    K = as.numeric(0)
+  )
+  remaining_lifetime_densities = GM$`Remaining lifetime density at age x+t`
+  expected_remaining_lifetimes = GM$`Expected remaining lifetime`
+  median_remaining_lifetimes = GM$`Median remaining lifetime`
+  conditional_survival_probabilities_for_another_t_years = GM$`Conditional probability of survival until the age of x+t`
+
+  res = list(remaining_lifetime_densities,expected_remaining_lifetimes,median_remaining_lifetimes,conditional_survival_probabilities_for_another_t_years)
+  names(res) = c("remaining_lifetime_densities","expected_remaining_lifetimes","median_remaining_lifetimes","conditional_survival_probabilities_for_another_t_years")
   return(res)
 }

@@ -1,4 +1,5 @@
 context("Test of required specs are fulfilled")
+tol = 0.00001
 
 test_that("01 FV single payment nominal", {
   A = fv(rate=0.04,inflation=.00, nper=35,pv=-1000,pmt=0,pmtinfladj=FALSE, pmtUltimo=TRUE)
@@ -94,4 +95,124 @@ test_that("09 Link withdrawals -> savings", {
   expect_equal(pmt2,ts(rep(1000,35)))
 })
 
+test_that("7m Pension fund’s view: Required wealth to finance constant (nominal/real) pension payments", {
+  x=65
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  inflation=0.01
+  conversionRate = 0.05
+  pmt = 100
+
+  res = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma=0,inflation=0,B=0,K=0)
+  expect_equal(res$`Expected remaining lifetime`,16.29717,tol)
+  expect_equal(res$`Annuity factor`,12.25068,tol)
+  requiredWealth = pmt * res$`Annuity factor`
+  expect_equal(requiredWealth,1225.068,tol)
+
+  res_real = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma=0,inflation,B=0,K=0)
+  expect_equal(res_real$`Expected remaining lifetime`,16.29717,tol)
+  expect_equal(res_real$`Annuity factor`,13.41923,tol)
+  requiredWealth = pmt * res_real$`Annuity factor`
+  expect_equal(requiredWealth,1341.923,tol)
+
+})
+
+test_that("8m Real pension payments that can be financed by given (real) savings", {
+  x=65
+  t=5
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  inflation=0.01
+  pmt=100
+
+  r_real=rate.real(0.03,0.01)
+
+  fv_real = fv.annuity(rate=r_real,inflation=0.00, nper=t,pmt=-pmt,pmtinfladj=FALSE,pmtUltimo=TRUE)
+  res_real = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma=0,inflation,B=0,K=0)
+  fair_conversion_rate =  1/res_real$`Annuity factor`
+  Annual_constant_continuous_real_spending = fv_real[5] * fair_conversion_rate
+
+  expect_equal(r_real,0.01980198,tol)
+  expect_equal(fv_real[5],520.198,tol)
+  expect_equal(fair_conversion_rate,0.07451993,tol)
+  expect_equal(Annual_constant_continuous_real_spending,38.76512,tol)
+})
+
+test_that("9m Savings required to finance given life-long continuous spending (both in real terms)", {
+  x=65
+  t=5
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  inflatiion=0.01
+  pmt=100
+
+  r_real=rate.real(0.03,0.01)
+
+  res_real = gompertzMakehamMortality(x,lambda,m,b,t,r,sigma=0,inflation,B=0,K=0)
+  requiredWealth = pmt * res_real$`Annuity factor`
+  fair_conversion_rate =  1/res_real$`Annuity factor`
+  constant_real_yearly_savings_payment = requiredWealth*r_real/((1+r_real)^t-1)
+
+  expect_equal(requiredWealth,1341.923,tol)
+  expect_equal(constant_real_yearly_savings_payment,257.9639,tol)
+  expect_equal(r_real,0.01980198,tol)
+  expect_equal(fair_conversion_rate,0.07451993,tol)
+
+})
+
+test_that("14n “Fair” conversion rate for given mortality, and constant expected (or average) investment returns", {
+  x=65
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  inflation=0.01
+
+  res = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma=0,inflation=0,B=0,K=0)
+  fair_conversion_rate =  1/res$`Annuity factor`
+  expect_equal(fair_conversion_rate,0.08162813,tol)
+
+  res_real =   res = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma=0,inflation,B=0,K=0)
+  fair_conversion_rate_real =  1/res_real$`Annuity factor`
+  expect_equal(fair_conversion_rate_real,0.07451993,tol)
+})
+
+test_that("15n Approximate probability of retirement ruin for given spending rate, given wealth and log-normally distributed real returns", {
+  x=65
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  inflation=0.01
+  sigma = 0.08
+  B = 100
+  K = 1000
+
+  res = gompertzMakehamMortality(x,lambda,m,b,t=0,r,sigma,inflation,B,K)
+  expect_equal(res$`Mortality Rate`,0.0426425,tol)
+  expect_equal(res$`Probability of retirement ruin when starting at wealth w`,0.6450261,tol)
+})
+
+test_that("16n Moments and conditional survival probabilities for the Gompertz-Makeham distribution", {
+  x=65
+  t=10
+  lambda=0
+  m=82.3
+  b=11.4
+  r=0.03
+  infl=0.01
+  sigma = 0.08
+  B = 100
+  K = 1000
+
+  res = gompertzMakehamMortality(x,lambda,m,b,t,r,sigma,inflation,B,K)
+  expect_equal(res$`Conditional probability of survival until the age of x+t`,0.7350199,tol)
+  expect_equal(as.numeric(res$`Remaining lifetime density at age x+t`[11,2]),0.03398548,tol)
+})
 
