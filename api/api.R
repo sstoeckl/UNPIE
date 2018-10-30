@@ -580,7 +580,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 
 #' Calculates a variety of morality parameters given by Gompertz-Makeham Law of Mortality
 #' @get /gompertzMakehamMortality
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -607,7 +607,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10,rc=0.01,sigma=0,inflation=0,B=100,K=10
 }
 
 #' @get /wrapper.case7m
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -625,7 +625,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0,pmt=0,convRate=1){
     t = as.numeric(0),
     r = as.numeric(r),
     sigma = as.numeric(0),
-    inflation = as.numeric(inflation),
+    inflation = as.numeric(0),
     B = as.numeric(0),
     K = as.numeric(0)
   )
@@ -671,7 +671,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0,pmt=0,convRate=1){
 }
 
 #' @get /wrapper.case8m
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -679,7 +679,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0,pmt=0,convRate=1){
 #' @param r:numeric Interest rate r (annual compounding)
 #' @param inflation:numeric Inflation rate i (annual compounding)
 #' @param pmt:numeric The payment (real) made each period (annuity). Must be entered as a negative number.
-function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
+function(x=65,lambda=0,m=82.3,b=11.4,t=5,r=0.03,inflation=0.01,pmt=-100){
 
     GM = unpie::gompertzMakehamMortality(
       x = as.numeric(x),
@@ -705,7 +705,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
       nper = as.numeric(t),
       pmt = as.numeric(pmt),
       pmtinfladj = as.logical(FALSE),
-      pmtUltimo = as.logical(FALSE)
+      pmtUltimo = as.logical(TRUE)
     )
 
     fair_conversion_rate =  1/as.numeric(GM$`Annuity factor`)
@@ -718,7 +718,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
   }
 
 #' @get /wrapper.case9m
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -747,7 +747,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
   )
 
   requiredWealth = as.numeric(pmt) * as.numeric(GM$`Annuity factor`)
-  constant_real_yearly_savings_payment = requiredWealth*realRate/((1+realRate)^t-1)
+  constant_real_yearly_savings_payment = requiredWealth*realRate/((1+realRate)^as.numeric(t)-1)
   fair_conversion_rate =  1/as.numeric(GM$`Annuity factor`)
   expected_remaining_lifetime = as.numeric(GM$`Expected remaining lifetime`)
 
@@ -757,7 +757,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,inflation=0,pmt=0){
 }
 
 #' @get /wrapper.case14n
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -786,7 +786,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0){
 }
 
 #' @get /wrapper.case15n
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -795,7 +795,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,r=0.01,inflation=0){
 #' @param inflation:numeric Inflation rate i (annual compounding)
 #' @param B:numeric Constant continuous real spending at rate
 #' @param K:numeric Wealth at retirement
-function(x=65,lambda=0,m=82.3,b=11.4,rc=0.01,sigma=0,inflation=0,B=100,K=1000){
+function(x=65,lambda=0,m=82.3,b=11.4,r=0.03,sigma=0.08,inflation=0.01,B=100,K=1000){
   GM = unpie::gompertzMakehamMortality(
     x = as.numeric(x),
     lambda = as.numeric(lambda),
@@ -818,7 +818,7 @@ function(x=65,lambda=0,m=82.3,b=11.4,rc=0.01,sigma=0,inflation=0,B=100,K=1000){
 }
 
 #' @get /wrapper.case16n
-#' @param x:numeric Annuitant’s age x in years.
+#' @param x:numeric Annuitants age x in years.
 #' @param lambda:numeric Gompertz-Makeham accidental death rate, often set to 0.
 #' @param m:numeric Gompertz-Makeham  modal natural death rate.
 #' @param b:numeric Gompertz-Makeham dispersion of natural death rate.
@@ -846,3 +846,104 @@ function(x=65,lambda=0,m=82.3,b=11.4,t=10){
   names(res) = c("remaining_lifetime_densities","expected_remaining_lifetimes","median_remaining_lifetimes","conditional_survival_probabilities_for_another_t_years")
   return(res)
 }
+
+#' @get /wrapper.case16nV2
+#' @param x1:numeric Annuitants age x in years.
+#' @param lambda1:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m1:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b1:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t1:numeric number of additional years
+#' @param x2:numeric Annuitants age x in years.
+#' @param lambda2:numeric Gompertz-Makeham accidental death rate, often set to 0.
+#' @param m2:numeric Gompertz-Makeham  modal natural death rate.
+#' @param b2:numeric Gompertz-Makeham dispersion of natural death rate.
+#' @param t2:numeric number of additional years
+
+function(x1=65,lambda1=0,m1=82.3,b1=11.4,t1=10,x2=25,lambda2=0,m2=82.3,b2=11.4,t2=10){
+  mmerge <- function(A,B){
+    min = min(A[,1],B[,1])
+    max = max(A[length(A[,1]),1],B[length(B[,1]),1])
+    la=length(A[,1])
+    lb=length(B[,1])
+    AA=A
+    BB=B
+
+    if(A[1,1]>B[1,1]){
+      vec1 = c(min:(A[1,1]-1))
+      l1 = length(vec1)
+      AA = rbind(matrix(c(vec1, rep(NA,l1)),ncol = 2),A)
+    }
+
+    if(B[1,1]>A[1,1]){
+      vec2 = c(min:(B[1,1]-1))
+      l2 = length(vec2)
+      BB = rbind(matrix(c(vec2, rep(NA,l2)),ncol = 2),B)
+    }
+
+    if(B[lb,1]>A[la,1]){
+      vec3 = c((A[la,1]+1):max)
+      l3 = length(vec3)
+      AA = rbind(AA,matrix(c(vec3, rep(0,l3)),ncol = 2))
+    }
+
+    if(A[la,1]>B[lb,1]){
+      vec4 = c((B[lb,1]+1):max)
+      l4 = length(vec4)
+      BB = rbind(BB,matrix(c(vec4, rep(0,l4)),ncol = 2))
+    }
+
+    C= merge(AA,BB, by=c("Age","Age"))
+    lc = length(C[,1])
+    C = array(c(C[,1],C[,2],C[,3]),c(lc,3))
+    tol=0.0001
+    remove = c()
+    for (i in 1:lc) {
+      if (isTRUE(C[i,2]<tol && C[i,3]<tol) ||(is.na(C[i,2]) && (is.na(C[i,3])))) {
+        remove = c(remove,i)
+      }
+    }
+
+    return (C[-remove,])
+  }
+
+  GM1 = unpie::gompertzMakehamMortality(
+    x = as.numeric(x1),
+    lambda = as.numeric(lambda1),
+    m = as.numeric(m1),
+    b = as.numeric(b1),
+    t = as.numeric(t1),
+    r = as.numeric(0),
+    sigma = as.numeric(0),
+    inflation = as.numeric(0),
+    B = as.numeric(0),
+    K = as.numeric(0)
+    )
+
+  GM2 = unpie::gompertzMakehamMortality(
+    x = as.numeric(x2),
+    lambda = as.numeric(lambda2),
+    m = as.numeric(m2),
+    b = as.numeric(b2),
+    t = as.numeric(t2),
+    r = as.numeric(0),
+    sigma = as.numeric(0),
+    inflation = as.numeric(0),
+    B = as.numeric(0),
+    K = as.numeric(0)
+    )
+
+  remaining_lifetime_densities = t(mmerge(GM1$`Remaining lifetime density at age x+t`,GM2$`Remaining lifetime density at age x+t`))
+  as.data.frame(remaining_lifetime_densities,ncol=2)
+  expected_remaining_lifetimes1 = GM1$`Expected remaining lifetime`
+  median_remaining_lifetimes1 = GM1$`Median remaining lifetime`
+  conditional_survival_probabilities_for_another_t_years1 = GM1$`Conditional probability of survival until the age of x+t`
+  expected_remaining_lifetimes2 = GM2$`Expected remaining lifetime`
+  median_remaining_lifetimes2 = GM2$`Median remaining lifetime`
+  conditional_survival_probabilities_for_another_t_years2 = GM2$`Conditional probability of survival until the age of x+t`
+
+  res = list(remaining_lifetime_densities,expected_remaining_lifetimes1,median_remaining_lifetimes1,conditional_survival_probabilities_for_another_t_years1,expected_remaining_lifetimes2,median_remaining_lifetimes2,conditional_survival_probabilities_for_another_t_years2)
+  names(res) = c("remaining_lifetime_densities","expected_remaining_lifetimes1","median_remaining_lifetimes1","conditional_survival_probabilities_for_another_t_years1","expected_remaining_lifetimes2","median_remaining_lifetimes2","conditional_survival_probabilities_for_another_t_years2")
+  return(res)
+
+}
+
