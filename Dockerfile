@@ -7,8 +7,8 @@ RUN apt-get update -qq && apt-get install -y \
     libcurl4-gnutls-dev
 
 RUN R -e 'install.packages(c("devtools"))'
+RUN R -e 'install.packages(c("plumber"))'
 
-RUN R -e 'devtools::install_github("trestletech/plumber")'
 RUN R -e 'devtools::install_github("eaoestergaard/UNPIE")'
 
 ADD /api/* /api/
