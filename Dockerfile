@@ -4,8 +4,10 @@ MAINTAINER name Snorri Pall Sigurdsson <sps@schantz.com>
 RUN apt-get update -qq && apt-get install -y \
     git-core \
     libssl-dev \
-    libcurl4-gnutls-dev
-
+    libcurl4-gnutls-dev \
+    libpq-dev \
+	libxml2-dev
+	
 RUN R -e 'install.packages(c("devtools"))'
 RUN R -e 'install.packages(c("plumber"))'
 
