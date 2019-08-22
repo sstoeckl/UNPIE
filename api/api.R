@@ -150,7 +150,7 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
     convRate = as.numeric(convRate),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
@@ -176,7 +176,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
     convRate = as.numeric(convRate),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     minPayouy = as.numeric(minPayouy),
     prob = as.numeric(prob),
     seed = as.numeric(seed),
@@ -203,7 +203,7 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
     wealth = as.numeric(wealth),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
@@ -226,7 +226,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
     minumumRuinTime = as.numeric(minumumRuinTime),
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     prob = as.numeric(prob),
     seed = as.numeric(seed)
   )
@@ -387,7 +387,7 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
     mu = as.numeric(return),
     sigma = as.numeric(volatility),
     convRate = as.numeric(convRate),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
@@ -422,7 +422,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
   mu = as.numeric(return)
   sigma = as.numeric(volatility)
   convRate = as.numeric(convRate)
-  nScenarios = as.numeric(nScenarios)
+  nScenarios = min(1e5,as.numeric(nScenarios))
   minPayouy = as.numeric(minPayouy)
   prob = as.numeric(prob)
   seed = as.numeric(seed)
@@ -442,7 +442,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     returnScenarios = returnScenarios
   )
   numberOfScenariosToReturn = as.numeric(numberOfScenariosToReturn)
-  nScenarios = as.numeric(nScenarios)
+  nScenarios = min(1e5,as.numeric(nScenarios)),
 
   if (returnScenarios==TRUE){
 
@@ -491,7 +491,7 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
     mu = as.numeric(mu),
     sigma = as.numeric(sigma),
     wealth = as.numeric(wealth),
-    nScenarios = as.numeric(nScenarios),
+    nScenarios = min(1e5,as.numeric(nScenarios)),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
@@ -527,7 +527,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   minumumRuinTime = as.numeric(minumumRuinTime)
   mu = as.numeric(return)
   sigma = as.numeric(volatility)
-  nScenarios = as.numeric(nScenarios)
+  nScenarios = min(1e5,as.numeric(nScenarios))
   prob = as.numeric(prob)
   seed = as.numeric(seed)
 
