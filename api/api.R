@@ -416,7 +416,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
 
     # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(mu)+1)
-  volatility = log(as.numeric(sigma)+1)
+  volatility = as.numeric(sigma)
 
   nper = as.numeric(nper)
   mu = as.numeric(return)
@@ -428,7 +428,6 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
   seed = as.numeric(seed)
   print = as.logical(print)
   returnScenarios = as.logical(returnScenarios)
-
 
   res = unpie::requiredSavingsForMinimumAnnuity(
     nper = nper,

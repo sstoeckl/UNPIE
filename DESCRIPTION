@@ -9,6 +9,7 @@ License: 3.3.1
 Encoding: UTF-8
 LazyData: true
 Imports: stats,
-         expint
-RoxygenNote: 6.1.0
+         expint,
+         timeSeries
+RoxygenNote: 6.1.1
 Suggests: testthat
