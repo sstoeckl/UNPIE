@@ -442,7 +442,7 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     returnScenarios = returnScenarios
   )
   numberOfScenariosToReturn = as.numeric(numberOfScenariosToReturn)
-  nScenarios = min(1e5,as.numeric(nScenarios)),
+  nScenarios = min(1e5,as.numeric(nScenarios))
 
   if (returnScenarios==TRUE){
 
@@ -521,7 +521,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 
   # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(mu)+1)
-  volatility = log(as.numeric(sigma)+1)
+  volatility = as.numeric(sigma)
 
   wealth = as.numeric(wealth)
   minumumRuinTime = as.numeric(minumumRuinTime)
@@ -532,7 +532,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
   seed = as.numeric(seed)
 
   # Generates result to get stable estimate of Maximum admissible (real) periodic spending
-  res1 = unpie::maximumSpendingForMinimumRuinTime(
+  res1 = unpie::maximumSpendingForMinimumRuinTimeV2(
     wealth = wealth,
     minumumRuinTime = minumumRuinTime,
     mu = return,
@@ -544,7 +544,7 @@ function(wealth=1000,minumumRuinTime=10, mu=0, sigma=0, nScenarios=1, prob=0.95,
 
   set.seed(NULL)
   # Generates result to get few random scenarios
-  res = unpie::maximumSpendingForMinimumRuinTime(
+  res = unpie::maximumSpendingForMinimumRuinTimeV2(
     wealth = wealth,
     minumumRuinTime = minumumRuinTime,
     mu = return,
