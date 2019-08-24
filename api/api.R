@@ -451,8 +451,6 @@ function(nper=1,mu=0,sigma=0,convRate=1,nScenarios=1,minPayouy = 1000, prob = 0.
     }
 
     set.seed(NULL)
-    print(nScenarios)
-    print(numberOfScenariosToReturn)
     randToPick = sample(nScenarios,numberOfScenariosToReturn) #Subset of scenarios are selected
     res$lifelong_pensions = res$lifelong_pensions[randToPick]
     res$depot_scenariros = res$depot_scenariros[randToPick,]
