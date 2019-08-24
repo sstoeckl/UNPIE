@@ -43,14 +43,13 @@ timeToRuin.scenario <- function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nS
     frequency = 1
   }
 
-
   if(is.scalar(spending)){
     spending = ts(rep(spending,nper), frequency = frequency, start = start, end = end)
   }
-  randData=matrix(rnorm(n = nScenarios*nper, mu, sigma ),nrow = nScenarios)
-  return = t(apply(randData,1,function(x) exp(x)))
-  colnames(return) <- colnames(return, do.NULL = FALSE, prefix = "Time")
-  rownames(return) <- rownames(return, do.NULL = FALSE, prefix = "Scenario")
+  randData=matrix(rnorm(n = nScenarios*nper),nrow = nScenarios)
+  #return = t(apply(randData,1,function(x) exp(x)))
+  #colnames(return) <- colnames(return, do.NULL = FALSE, prefix = "Time")
+  #rownames(return) <- rownames(return, do.NULL = FALSE, prefix = "Scenario")
 
   scenarios = matrix(NA,nrow =nScenarios,ncol = nper)
   colnames(scenarios) <- colnames(scenarios, do.NULL = FALSE, prefix = "Time")
@@ -65,12 +64,11 @@ timeToRuin.scenario <- function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nS
 
   for(scenario in 1:nScenarios){ #Calculates each scenario
     for(time in 1:nper){ #calculates principal
-      scenarios[scenario,time+1] = -spending[time]+return[scenario,time]*scenarios[scenario,time]
+      scenarios[scenario,time+1] = -spending[time]+exp(randData[scenario,time]*sigma+mu)*scenarios[scenario,time]
     }
     scenarios[scenarios < 0] = 0 # When ruined wealth becomes zero
     ruined[scenario] <- which(scenarios[scenario,] <= 0)[1]-1
   }
-
 
   quantileScenarios = t(apply(scenarios,2,quantile,probs=quantiles))
 

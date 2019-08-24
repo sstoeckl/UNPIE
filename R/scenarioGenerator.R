@@ -5,6 +5,7 @@
 #' @param mean The mean of random normal distribution to sample from.
 #' @param sd The standard deviation of random normal distribution to sample from.
 #' @param seed Integer vector, containing the random number generator (RNG) state for random number generation in R
+#' @import timeSeries
 #' @export
 #' @examples
 #' scenarioGenerator(nper=25,nScenarios=1000,mean=0,sd=1,seed=NULL)
@@ -25,16 +26,21 @@ scenarioGenerator <- function(nper=25,nScenarios=1000,mean=0,sd=1,seed = NULL){
   }
 
   randData=matrix(rnorm(n = nScenarios*nper, mean, sd ),nrow = nScenarios)
-  randData[,1] = 0
-  f = t(apply(randData,1,function(x) cumprod(x+1)))
+
+  f = exp(timeSeries::rowCumsums(randData[,1:(nper-1)]))
+  f = t(apply(f,1,function(x) cumsum(x)))
+  f = cbind(rep(0,nScenarios),f)+1
+
   k = matrix(rep(seq(1:nper),nScenarios),ncol=nper,nrow=nScenarios,byrow = TRUE)
   if (nper == 1) {
     return(k)
   }else{
-    return(f*k)
+    return(f)
   }
 
 }
+
+
 
 
 
