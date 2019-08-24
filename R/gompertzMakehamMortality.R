@@ -10,6 +10,7 @@
 #' @param inflation Inflation rate i (annual compounding)
 #' @param B Constant continuous real spending at rate
 #' @param K Wealth at retirement
+#' @import expint
 #' @export
 #' @examples
 #' gompertzMakehamMortality(x=65,lambda=0,m=82.3,b=11.4,t=10,r=0.01,sigma=0,inflation=0,B=100,K=1000)
