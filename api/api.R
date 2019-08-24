@@ -379,7 +379,7 @@ function(pmt=0,nper=1,mu=0,sigma=0,convRate=1,nScenarios=1, returnScenarios = FA
 
   # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(mu)+1)
-  volatility = log(as.numeric(sigma)+1)
+  volatility = as.numeric(sigma)
 
   res = unpie::fv.annuity.scenario(
     pmt = as.numeric(pmt),
@@ -483,7 +483,7 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
 
   # Adjust rates reflect simple compounding as in previous apps
   return = log(as.numeric(mu)+1)
-  volatility = log(as.numeric(sigma)+1)
+  volatility = as.numeric(sigma)
 
   res = unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
