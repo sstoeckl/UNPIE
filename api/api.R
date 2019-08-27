@@ -486,14 +486,15 @@ function(spending=100,nper=10,mu=0,sigma=0,wealth=1000,nScenarios=1, returnScena
   res = unpie::timeToRuin.scenario(
     spending = as.numeric(spending),
     nper = as.numeric(nper),
-    mu = as.numeric(mu),
-    sigma = as.numeric(sigma),
+    mu = return,
+    sigma = volatility,
     wealth = as.numeric(wealth),
     nScenarios = min(1e5,as.numeric(nScenarios)),
     returnScenarios = as.logical(returnScenarios),
     quantiles = as.numeric(quantiles),
     seed = as.numeric(seed)
   )
+
   # Ruin time = last positive T plus 2, accounts for 0 index and ensure ruin by plus 1.
   Time_ruin_vec = as.vector(res$LastYearWithPositiveWealth+2)
   Time_ruin_vec = Time_ruin_vec[sapply(Time_ruin_vec, function(x) x <= as.numeric(nper)+1)]
