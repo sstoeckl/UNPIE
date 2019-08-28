@@ -6,11 +6,11 @@ RUN apt-get update -qq && apt-get install -y \
     libssl-dev \
     libcurl4-gnutls-dev \
     libpq-dev \
+	libsodium-dev \
 	libxml2-dev
 	
-RUN R -e 'install.packages(c("devtools"))'
-RUN R -e 'install.packages(c("plumber"))'
-
+RUN R -e 'install.packages("devtools")'
+RUN R -e 'devtools::install_github("rstudio/plumber")'
 RUN R -e 'devtools::install_github("eaoestergaard/UNPIE")'
 
 ADD /api/* /api/
