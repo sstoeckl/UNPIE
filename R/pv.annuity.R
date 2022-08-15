@@ -67,7 +67,7 @@ pv.annuity <- function(rate=0,inflation=0,nper=1,pmt=0,pmtinfladj=FALSE,pmtUltim
   pv = ts(cumsum(pv),frequency = frequency, start = start, end = end)
 
   if (any(inflation!=0)){
-
+    pv = infladj(pv,inflation,nper)
   }
   return(pv)
 }

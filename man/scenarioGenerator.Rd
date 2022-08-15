@@ -4,8 +4,7 @@
 \alias{scenarioGenerator}
 \title{Makes scenarios with rnorm.}
 \usage{
-scenarioGenerator(nper = 25, nScenarios = 1000, mean = 0, sd = 1,
-  seed = NULL)
+scenarioGenerator(nper = 25, nScenarios = 1000, mean = 0, sd = 1, seed = NULL)
 }
 \arguments{
 \item{nper}{The total number of payment periods. Default is one period}

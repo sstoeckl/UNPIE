@@ -4,8 +4,15 @@
 \alias{pv}
 \title{Returns the present value of a single payment and annuity payments (spending) made in the future (fv)}
 \usage{
-pv(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0,
-  pmtinfladj = FALSE, pmtUltimo = TRUE)
+pv(
+  rate = 0,
+  inflation = 0,
+  nper = 1,
+  fv = 0,
+  pmt = 0,
+  pmtinfladj = FALSE,
+  pmtUltimo = TRUE
+)
 }
 \arguments{
 \item{rate}{The interest rate per period. Default is zero. Must be entered as decimal.}

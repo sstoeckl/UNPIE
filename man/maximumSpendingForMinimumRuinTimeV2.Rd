@@ -4,9 +4,15 @@
 \alias{maximumSpendingForMinimumRuinTimeV2}
 \title{Calculates scenarios of future value of annuity payments (fv) with stochastic returns}
 \usage{
-maximumSpendingForMinimumRuinTimeV2(wealth = 14000,
-  minumumRuinTime = 16, mu = 0.03, sigma = 0.08, nScenarios = 200,
-  prob = 0.9, seed = NULL)
+maximumSpendingForMinimumRuinTimeV2(
+  wealth = 14000,
+  minumumRuinTime = 16,
+  mu = 0.03,
+  sigma = 0.08,
+  nScenarios = 200,
+  prob = 0.9,
+  seed = NULL
+)
 }
 \arguments{
 \item{wealth}{The wealth at retirement. Must be entered as a positive number}

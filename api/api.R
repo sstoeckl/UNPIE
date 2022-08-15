@@ -92,7 +92,7 @@ function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0, pmtinfladj = FALSE,
     rate = as.numeric(rate),
     inflation = as.numeric(inflation),
     nper = as.numeric(nper),
-    fv = as.numeric(pv),
+    fv = as.numeric(fv),
     pmt = as.numeric(pmt),
     pmtinfladj = as.logical(pmtinfladj),
     pmtUltimo = as.logical(pmtUltimo)
@@ -942,6 +942,229 @@ function(x1=65,lambda1=0,m1=82.3,b1=11.4,t1=10,x2=25,lambda2=0,m2=82.3,b2=11.4,t
   res = list(remaining_lifetime_densities,expected_remaining_lifetimes1,median_remaining_lifetimes1,conditional_survival_probabilities_for_another_t_years1,expected_remaining_lifetimes2,median_remaining_lifetimes2,conditional_survival_probabilities_for_another_t_years2)
   names(res) = c("remaining_lifetime_densities","expected_remaining_lifetimes1","median_remaining_lifetimes1","conditional_survival_probabilities_for_another_t_years1","expected_remaining_lifetimes2","median_remaining_lifetimes2","conditional_survival_probabilities_for_another_t_years2")
   return(res)
+
+}
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /pv.growth
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param fv:numeric The future value of single spending made in the future. Default is assumed to be zero. Must be entered as a negative number.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
+function(rate = 0, inflation = 0, nper = 1, fv = 0, pmt = 0,pmtGrowth = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
+pmts = unpie::pmt.growth(
+  nper=as.numeric(nper),
+  pmt=as.numeric(pmt),
+  pmtGrowth=as.numeric(pmtGrowth)
+)
+
+pv = unpie::pv(
+  rate = as.numeric(rate),
+  inflation = as.numeric(inflation),
+  nper = as.numeric(nper),
+  fv = as.numeric(fv),
+  pmt = pmts,
+  pmtinfladj = as.logical(pmtinfladj),
+  pmtUltimo = as.logical(pmtUltimo)
+)
+return(pv)
+}
+
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /pmt.growth
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+function(nper = 1,pmt = 0,pmtGrowth = 0, inflation = 0, pmtinfladj=FALSE){
+  pmts = unpie::pmt.growth(
+    nper=as.numeric(nper),
+    pmt=as.numeric(pmt),
+    pmtGrowth=as.numeric(pmtGrowth),
+    pmtinfladj = as.logical(pmtinfladj),
+    inflation = as.numeric(inflation)
+  )
+
+  return(pmts)
+}
+
+#' Wrapper case 2
+#' @get /case2.wrapper
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param fv:numeric The future value of single payment (spending) made in the future. Default is assumed to be zero. Must be entered as a negative number
+function(rate = 0, inflation = 0, nper = 1, fv = 0){
+
+  rate_ = as.numeric(rate)
+  inflation_ = as.numeric(inflation)
+  nper_ = as.numeric(nper)
+  fv_ = as.numeric(fv)
+
+  pv_new = unpie::pv.single(
+    rate = rate_ ,
+    inflation = 0,
+    nper = nper_,
+    fv = fv_
+  )
+
+  fv_new = unpie::fv.single(
+    rate = inflation_,
+    inflation = 0,
+    nper = nper_,
+    pv = pv_new[nper_]
+  )
+
+  return(fv_new)
+}
+
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /case3.wrapper
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param pv:numeric The present value of single investment made today. Default is assumed to be zero. Must be entered as a negative number.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
+function(rate = 0, inflation = 0, nper = 1, pv = 0, pmt = 0,pmtGrowth = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
+  pmts = unpie::pmt.growth(
+    nper=as.numeric(nper),
+    pmt=as.numeric(pmt),
+    pmtGrowth=as.numeric(pmtGrowth)
+  )
+  fvs=unpie::fv(
+    rate = as.numeric(rate),
+    inflation = as.numeric(inflation),
+    nper = as.numeric(nper),
+    pv = as.numeric(pv),
+    pmt = pmts,
+    pmtinfladj = as.logical(pmtinfladj),
+    pmtUltimo = as.logical(pmtUltimo)
+
+  )
+
+  return(fvs)
+}
+
+
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /case5.wrapper1
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+function(rate=0,inflation=0,nper=1,pmt=0, pmtGrowth=0,pmtinfladj=FALSE )
+{
+  pmts = unpie::pmt.growth(
+    nper=as.numeric(nper),
+    pmt=as.numeric(pmt),
+    pmtGrowth=as.numeric(pmtGrowth),
+    pmtinfladj = as.logical(pmtinfladj),
+    inflation = as.numeric(inflation)
+  )
+
+
+  pv = unpie::pv(
+    rate = as.numeric(rate),
+    inflation = as.numeric(inflation),
+    nper = as.numeric(nper),
+    fv = as.numeric(0),
+    pmt = pmts,
+    pmtinfladj = FALSE, #already handed above
+    pmtUltimo = as.logical(TRUE)
+  )
+  return(pv)
+
+}
+
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /case5.wrapper2
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal or ts
+#' @param inflation:numeric The inflation rate per period. Default is zero. Must be entered as decimal or ts
+#' @param nper:int The total number of payment periods. Default is one period. If rate and inflation are entered as ts nper is ignored.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+function(rate=0,inflation=0,nper=1,pmt=0, pmtGrowth=0,pmtinfladj=FALSE )
+{
+  pmts = unpie::pmt.growth(
+    nper=as.numeric(nper),
+    pmt=as.numeric(pmt),
+    pmtGrowth=as.numeric(pmtGrowth),
+    pmtinfladj = as.logical(pmtinfladj),
+    inflation = as.numeric(inflation)
+  )
+
+
+  pv.Real = unpie::pv(
+    rate = as.numeric(rate),
+    inflation = 0,
+    nper = as.numeric(nper),
+    fv = as.numeric(0),
+    pmt = pmts,
+    pmtinfladj = FALSE, #already handed above
+    pmtUltimo = as.logical(TRUE)
+  )
+  return(pv.Real)
+
+}
+
+#' Returns the present value of a single payment and annuity payments (spending) made in the future (fv)
+#' @get /case5.wrapper3
+#' @param rate:numeric The interest rate per period. Default is zero. Must be entered as decimal.
+#' @param inflation:numeric The inflation forcast. Default is zero. Must be entered as decimal.
+#' @param nper:int The total number of payment periods. Default is one period.
+#' @param pv:numeric The present value of single investment made today. Default is assumed to be zero. Must be entered as a negative number.
+#' @param pmt:numeric The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param pmtGrowth:numeric The payment growth rate.
+#' @param pmtinfladj:logical Should the payments be inflation adjusted? E.g. are the annuity pmt constant or real annuities. Only avaliable for pmt given as scalar. Default value = FALSE.
+#' @param pmtUltimo:logical When payments are due. TRUE = end of period, FALSE = beginning of period. Default is TRUE.
+function(rate = 0, inflation = 0, nper = 1, pv = 0, pmt = 0,pmtGrowth = 0, pmtinfladj = FALSE, pmtUltimo = TRUE){
+  pmts = unpie::pmt.growth(
+    nper=as.numeric(nper),
+    pmt=as.numeric(pmt),
+    pmtGrowth=as.numeric(pmtGrowth),
+    pmtinfladj = as.logical(pmtinfladj),
+    inflation = as.numeric(inflation)
+  )
+
+  fvs=unpie::fv(
+    rate = as.numeric(rate),
+    inflation =  as.numeric(inflation),
+    nper = as.numeric(nper),
+    pv = as.numeric(pv),
+    pmt = pmts,
+    pmtinfladj = as.logical(FALSE), # already adjusted above
+    pmtUltimo = as.logical(pmtUltimo)
+
+  )
+
+  return(fvs)
+}
+
+#' Returns the future value of a single payment and annuity payments (fv)
+#' @get /pvAnnuityGrowth
+#' @param rate The interest rate per period. Default is zero. Must be entered as decimal
+#' @param nper The total number of payment periods. Default is one period
+#' @param inflation The inflation rate per period. Default is zero. Must be entered as decimal
+#' @param netWorth The payment (spending) made each period (annuity) in the future. Must be entered as a negative number.
+#' @param annuityGrowth The annuity growth from one period to another.
+function(rate=0,inflation=0, nper=1,annuityGrowth=0,netWorth=1000){
+  unpie::pv.annuity.growth(
+    rate = as.numeric(rate),
+    inflation = as.numeric(inflation),
+    nper = as.numeric(nper),
+    annuityGrowth = as.numeric(annuityGrowth),
+    netWorth = as.numeric(netWorth)
+  )
 
 }
 

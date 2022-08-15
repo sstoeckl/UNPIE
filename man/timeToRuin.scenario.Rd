@@ -4,9 +4,17 @@
 \alias{timeToRuin.scenario}
 \title{Calculates scenarios of future value of annuity payments (fv) with stochastic returns}
 \usage{
-timeToRuin.scenario(spending = 100, nper = 10, mu = 0, sigma = 0,
-  wealth = 1000, nScenarios = 1, returnScenarios = FALSE,
-  quantiles = c(0, 0.25, 0.5, 0.75, 1), seed = NULL)
+timeToRuin.scenario(
+  spending = 100,
+  nper = 10,
+  mu = 0,
+  sigma = 0,
+  wealth = 1000,
+  nScenarios = 1,
+  returnScenarios = FALSE,
+  quantiles = c(0, 0.25, 0.5, 0.75, 1),
+  seed = NULL
+)
 }
 \arguments{
 \item{spending}{The annual spending. Must be given as negative number.}

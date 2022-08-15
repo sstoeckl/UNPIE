@@ -4,9 +4,18 @@
 \alias{requiredSavingsForMinimumAnnuity}
 \title{Finds the required savings for minimum annuity}
 \usage{
-requiredSavingsForMinimumAnnuity(nper = 1, mu = 0, sigma = 0,
-  convRate = 1, nScenarios = 1, minPayouy = 1000, prob = 0.95,
-  seed = NULL, print = FALSE, returnScenarios = FALSE)
+requiredSavingsForMinimumAnnuity(
+  nper = 1,
+  mu = 0,
+  sigma = 0,
+  convRate = 1,
+  nScenarios = 1,
+  minPayouy = 1000,
+  prob = 0.95,
+  seed = NULL,
+  print = FALSE,
+  returnScenarios = FALSE
+)
 }
 \arguments{
 \item{nper}{The total number of payment periods. Default is one period}

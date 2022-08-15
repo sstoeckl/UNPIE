@@ -4,8 +4,18 @@
 \alias{gompertzMakehamMortality}
 \title{Calculates a variety of morality parameters given by Gompertz-Makeham Law of Mortality}
 \usage{
-gompertzMakehamMortality(x, lambda, m, b, t = 0, r = 0, sigma = 0,
-  inflation = 0, B = 0, K = 0)
+gompertzMakehamMortality(
+  x,
+  lambda,
+  m,
+  b,
+  t = 0,
+  r = 0,
+  sigma = 0,
+  inflation = 0,
+  B = 0,
+  K = 0
+)
 }
 \arguments{
 \item{x}{Annuitant’s age x in years.}

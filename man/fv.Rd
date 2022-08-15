@@ -4,8 +4,15 @@
 \alias{fv}
 \title{Returns the future value of a single payment and annuity payments (fv)}
 \usage{
-fv(rate = 0, inflation = 0, nper = 1, pv = 0, pmt = 0,
-  pmtinfladj = FALSE, pmtUltimo = TRUE)
+fv(
+  rate = 0,
+  inflation = 0,
+  nper = 1,
+  pv = 0,
+  pmt = 0,
+  pmtinfladj = FALSE,
+  pmtUltimo = TRUE
+)
 }
 \arguments{
 \item{rate}{The interest rate per period. Default is zero. Must be entered as decimal.}
