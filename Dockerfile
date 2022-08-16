@@ -8,10 +8,10 @@ RUN apt-get update -qq && apt-get install -y \
     libpq-dev \
 	libsodium-dev \
 	libxml2-dev
-	
+
 RUN R -e 'install.packages("devtools")'
 RUN R -e 'devtools::install_github("rstudio/plumber")'
-RUN R -e 'devtools::install_github("eaoestergaard/UNPIE")'
+RUN R -e 'devtools::install_github("eaoestergaard/UNPIE",force = TRUE)'
 
 ADD /api/* /api/
 
